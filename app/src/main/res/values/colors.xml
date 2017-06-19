@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#303030</color>
+    <color name="colorPrimaryDark">#303030</color>
+    <color name="colorAccent">#303030</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="grey_color">#8d8a8a</color>
+
+
+    <!--Background color-->
+    <color name="blue_bg">#D0EAF5</color>
+    <color name="yellow_bg">#F5DC53</color>
+    <color name="pink_bg">#D35B9D</color>
+    <color name="green_teal_bg">#00A3B5</color>
+    <color name="red_bg">#db0020</color>
+    <color name="helpline_green_bg">#70b934</color>
+    <color name="maroon_bg">#8a1939</color>
+    <color name="helpline_blue_bg">#2babbe</color>
+    <color name="selected_day_color">#d3bd36</color>
+    <color name="blue_more_info_bg">#009CDF</color>
+    <color name="orange">#ee9c5d</color>
+    <color name="purple">#9e4087</color>
+    <color name="green">#57b146</color>
+    <color name="bus_bottom_color">#afdaeb</color>
+    <color name="blue_news_bg">#02a6e3</color>
+    <color name="nav_bg">#008ec3</color>
+    <color name="map_bg">#6fc57a</color>
+    <color name="blue_color_zone1">#3196c7</color>
+
+
+    <!-- Text Color-->
+    <color name="moreinfo_text_color">#1d1d1b</color>
+    <color name="checklist_text_color">#191919</color>
+    <color name="pink_text_color">#f5bddc</color>
+    <color name="light_blue_text_color">#83dbe0</color>
+    <color name="light_green_text_color">#d4f2d8</color>
+    <color name="light_grey_text_color">#c8c9c8</color>
+    <color name="location_text_color">#afafaf</color>
+    <color name="photos_text_color">#8dc0dc</color>
+    <color name="am_pm_text_color">#f9cae4</color>
+</resources>

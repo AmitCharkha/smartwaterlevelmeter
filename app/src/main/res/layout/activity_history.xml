@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/backTextView"
+                android:layout_width="wrap_content"
+                android:text="Back"
+                android:textColor="@color/white"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:padding="10dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="History"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/monthYearTextView"
+                android:layout_width="wrap_content"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/line4"
+            android:layout_below="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:background="@color/black"
+            android:layout_height="1dp" />
+
+        <com.github.sundeepk.compactcalendarview.CompactCalendarView
+            android:id="@+id/compactcalendar_view"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/line4"
+            android:layout_height="210dp"
+            android:paddingTop="5dp"
+            app:compactCalendarTargetHeight="250dp"
+            app:compactCalendarTextSize="14sp"
+            app:compactCalendarBackgroundColor="@color/white"
+            app:compactCalendarTextColor="@color/black"
+            app:compactCalendarCurrentSelectedDayBackgroundColor="@color/blue_color_zone1"
+            app:compactCalendarCurrentDayBackgroundColor="@color/green"
+            app:compactCalendarMultiEventIndicatorColor="@color/white" />
+
+        <TextView
+            android:id="@+id/line2"
+            android:layout_below="@+id/compactcalendar_view"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/nav_bg"
+            android:layout_height="1dp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_below="@+id/line2"
+            android:layout_above="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="250dp" />
+
+        <TextView
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/nav_bg"
+            android:layout_height="1dp" />
+</RelativeLayout>

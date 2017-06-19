@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.vem_tooling.smartwaterlevelmonitor.font_text_view.CorisandeBoldTextView
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Alarm Setting"
+            android:layout_height="wrap_content" />
+
+        <com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoLightItalicTextView
+            android:id="@+id/backTextView"
+            android:layout_width="wrap_content"
+            android:text="Back"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <com.vem_tooling.smartwaterlevelmonitor.font_text_view.CorisandeBoldTextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:text="Tank 1"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_below="@+id/textView1"
+                android:weightSum="2"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchButton1"
+                        android:layout_width="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:checked="false"
+                        app:switchPadding="20dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="70 %" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchButtonw"
+                        android:layout_width="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:checked="false"
+                        app:switchPadding="20dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="25 %" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
