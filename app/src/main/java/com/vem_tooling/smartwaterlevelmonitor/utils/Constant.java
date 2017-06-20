@@ -1,5 +1,8 @@
 package com.vem_tooling.smartwaterlevelmonitor.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 /**
  * Created by amit on 2/6/17.
  */
@@ -33,4 +36,24 @@ public class Constant {
     public static String SMARTDEVICE_PREF = "SMARTDEVICE_PREF";
     public static String IS_ADMIN = "IS_ADMIN";
     public static String SETUP_PAGE_NUMBER = "SETUP_PAGE_NUMBER";
+
+    public static boolean checkInternetConnection(Context context) {
+
+        ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService (Context.CONNECTIVITY_SERVICE);
+
+        // ARE WE CONNECTED TO THE NET
+        if(conMgr == null){
+            return false;
+        }
+        else{
+            if (conMgr.getActiveNetworkInfo() != null
+                    && conMgr.getActiveNetworkInfo().isAvailable()
+                    && conMgr.getActiveNetworkInfo().isConnected()) {
+                return true;
+
+            } else {
+                return false;
+            }
+        }
+    }
 }

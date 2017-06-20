@@ -1,6 +1,7 @@
 package com.vem_tooling.smartwaterlevelmonitor.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -50,8 +51,8 @@ public class SettingScreen extends AppCompatActivity {
     @BindView(R.id.backTextView)
     LatoLightItalicTextView backTextView;
 
-    @BindView(R.id.errorMessage)
-    TextView errorMessage;
+    /*@BindView(R.id.errorMessage)
+    TextView errorMessage;*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,14 +77,15 @@ public class SettingScreen extends AppCompatActivity {
         setRtc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRtcTest();
+                setRtc();
             }
         });
 
         alarmSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(SettingScreen.this,AlarmSettingActivity.class);
+                startActivity(intent);
             }
         });
         //SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
@@ -136,7 +138,7 @@ public class SettingScreen extends AppCompatActivity {
                         }catch (Exception e){
                             e.printStackTrace();
                             Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_LONG).show();
-                            errorMessage.setText(response + "\n" + " One : " + e.toString());
+                            //errorMessage.setText(response + "\n" + " One : " + e.toString());
                         }
 
 
@@ -175,14 +177,14 @@ public class SettingScreen extends AppCompatActivity {
 
                     }catch (Exception e){
                         Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_LONG).show();
-                        errorMessage.setText(response + "\n" + " Two :  " + e.toString());
+                        //errorMessage.setText(response + "\n" + " Two :  " + e.toString());
                     }
                 }
 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    errorMessage.setText("Three :  " + error.toString());
+                    //errorMessage.setText("Three :  " + error.toString());
                     Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_LONG).show();
                     if(progress != null){
                         progress.cancel();

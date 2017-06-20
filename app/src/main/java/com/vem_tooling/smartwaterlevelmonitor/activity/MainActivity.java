@@ -1,6 +1,9 @@
 package com.vem_tooling.smartwaterlevelmonitor.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -23,9 +26,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vem_tooling.smartwaterlevelmonitor.R;
+import com.vem_tooling.smartwaterlevelmonitor.db.SmartDeviceDB;
 import com.vem_tooling.smartwaterlevelmonitor.scroll_view.MultiScrollNumber;
 import com.vem_tooling.smartwaterlevelmonitor.utils.Constant;
 import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences;
+import com.vem_tooling.smartwaterlevelmonitor.vo.TankVO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -93,7 +101,11 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        getIntVal();
+        if(Constant.checkInternetConnection(getApplicationContext())) {
+            getIntValue();
+        }else{
+            getValue();
+        }
     }
 
     @Override
@@ -158,7 +170,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    void setValue(int no,int val){
+    TankVO setValue(int no,int val){
 
         switch (no){
             case  1:
@@ -187,6 +199,12 @@ public class MainActivity extends AppCompatActivity
                 break;
 
         }
+
+        TankVO tankVO = new TankVO();
+        tankVO.setTankNo(no);
+        tankVO.setPercentage(val);
+
+        return tankVO;
     }
 
     void getIntVal(){
@@ -199,6 +217,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onResponse(String response) {
                     try {
+                        List<TankVO> tankVOs = new ArrayList<>();
                         if(response == null || response.equalsIgnoreCase("")){
                             if(progress != null){
                                 progress.cancel();
@@ -211,52 +230,55 @@ public class MainActivity extends AppCompatActivity
                         test1[0] = str2.deleteCharAt(str2.indexOf("(")).toString();
                         str2 = new StringBuilder(test1[11].trim());
                         test1[11] = str2.deleteCharAt(str2.indexOf(")")).toString();
-                        if(Integer.parseInt(test1[1].trim()) != 0){
-                            relativeLayoutOne.setVisibility(View.VISIBLE);
-                            setValue(Integer.parseInt(test1[0].trim()),Integer.parseInt(test1[1].trim()));
-                        }else{
+                        //if(Integer.parseInt(test1[1].trim()) != 0){
+                        relativeLayoutOne.setVisibility(View.VISIBLE);
+                        tankVOs.add(setValue(Integer.parseInt(test1[0].trim()),Integer.parseInt(test1[1].trim())));
+                        /*}else{
                             relativeLayoutOne.setVisibility(View.GONE);
-                        }
+                        }*/
 
-                        if(Integer.parseInt(test1[3].trim()) != 0){
-                            relativeLayoutTwo.setVisibility(View.VISIBLE);
-                            setValue(Integer.parseInt(test1[2].trim()),Integer.parseInt(test1[3].trim()));
-                        }else{
+                        //if(Integer.parseInt(test1[3].trim()) != 0){
+                        relativeLayoutTwo.setVisibility(View.VISIBLE);
+                        tankVOs.add(setValue(Integer.parseInt(test1[2].trim()),Integer.parseInt(test1[3].trim())));
+                        /*}else{
                             relativeLayoutTwo.setVisibility(View.GONE);
-                        }
+                        }*/
 
-                        if(Integer.parseInt(test1[5].trim()) != 0){
-                            relativeLayoutThree.setVisibility(View.VISIBLE);
-                            setValue(Integer.parseInt(test1[4].trim()),Integer.parseInt(test1[5].trim()));
-                        }else{
+                        //if(Integer.parseInt(test1[5].trim()) != 0){
+                        relativeLayoutThree.setVisibility(View.VISIBLE);
+                        tankVOs.add(setValue(Integer.parseInt(test1[4].trim()),Integer.parseInt(test1[5].trim())));
+                        /*}else{
                             relativeLayoutThree.setVisibility(View.GONE);
-                        }
+                        }*/
 
-                        if(Integer.parseInt(test1[7].trim()) != 0){
-                            relativeLayoutFour.setVisibility(View.VISIBLE);
-                            setValue(Integer.parseInt(test1[6].trim()),Integer.parseInt(test1[7].trim()));
-                        }else{
+                        //if(Integer.parseInt(test1[7].trim()) != 0){
+                        relativeLayoutFour.setVisibility(View.VISIBLE);
+                        tankVOs.add(setValue(Integer.parseInt(test1[6].trim()),Integer.parseInt(test1[7].trim())));
+                        /*}else{
                             relativeLayoutFour.setVisibility(View.GONE);
                         }
-
-                        if(Integer.parseInt(test1[9].trim()) != 0){
-                            relativeLayoutFive.setVisibility(View.VISIBLE);
-                            setValue(Integer.parseInt(test1[8].trim()),Integer.parseInt(test1[9].trim()));
-                        }else{
+*/
+                        //if(Integer.parseInt(test1[9].trim()) != 0){
+                        relativeLayoutFive.setVisibility(View.VISIBLE);
+                        tankVOs.add(setValue(Integer.parseInt(test1[8].trim()),Integer.parseInt(test1[9].trim())));
+                       /* }else{
                             relativeLayoutFive.setVisibility(View.GONE);
                         }
 
-                        if(Integer.parseInt(test1[11].trim()) != 0){
-                            relativeLayoutSix.setVisibility(View.VISIBLE);
-                            setValue(Integer.parseInt(test1[10].trim()),Integer.parseInt(test1[11].trim()));
-                        }else{
+                        if(Integer.parseInt(test1[11].trim()) != 0){*/
+                        relativeLayoutSix.setVisibility(View.VISIBLE);
+                        tankVOs.add(setValue(Integer.parseInt(test1[10].trim()),Integer.parseInt(test1[11].trim())));
+                        /*}else{
                             relativeLayoutSix.setVisibility(View.GONE);
-                        }
+                        }*/
+
 
                         if(progress != null){
                             progress.cancel();
                         }
                         refreshTextView.setEnabled(true);
+
+
                     }catch (Exception e){
                         if(progress != null){
                             progress.cancel();
@@ -292,6 +314,28 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    void getValue(){
+        try {
+            ProgressDialog progress = new ProgressDialog(MainActivity.this);
+            progress.setMessage("Please Wait...");
+            progress.show();
+
+            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+            List<TankVO> tankVOs = smartDeviceDB.getTankPercentage();
+
+            for (TankVO tankVO:tankVOs) {
+                setValue(tankVO.getTankNo(),tankVO.getPercentage());
+            }
+
+            if (progress != null) {
+                progress.cancel();
+            }
+
+            Toast.makeText(getApplicationContext(),"Connect to tank wifi to get updated value", Toast.LENGTH_LONG).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     void getIntValue(){
 
@@ -306,48 +350,74 @@ public class MainActivity extends AppCompatActivity
             test1[0] = str2.deleteCharAt(str2.indexOf("(")).toString();
             str2 = new StringBuilder(test1[11].trim());
             test1[11] = str2.deleteCharAt(str2.indexOf(")")).toString();
-            if (Integer.parseInt(test1[1].trim()) != 0) {
-                relativeLayoutOne.setVisibility(View.VISIBLE);
-                setValue(Integer.parseInt(test1[0].trim()), Integer.parseInt(test1[1].trim()));
-            } else {
-                relativeLayoutOne.setVisibility(View.GONE);
+            //if(Integer.parseInt(test1[1].trim()) != 0){
+            List<TankVO> tankVOs = new ArrayList<>();
+            relativeLayoutOne.setVisibility(View.VISIBLE);
+            tankVOs.add(setValue(Integer.parseInt(test1[0].trim()),Integer.parseInt(test1[1].trim())));
+                        /*}else{
+                            relativeLayoutOne.setVisibility(View.GONE);
+                        }*/
+
+            //if(Integer.parseInt(test1[3].trim()) != 0){
+            relativeLayoutTwo.setVisibility(View.VISIBLE);
+            tankVOs.add(setValue(Integer.parseInt(test1[2].trim()),Integer.parseInt(test1[3].trim())));
+                        /*}else{
+                            relativeLayoutTwo.setVisibility(View.GONE);
+                        }*/
+
+            //if(Integer.parseInt(test1[5].trim()) != 0){
+            relativeLayoutThree.setVisibility(View.VISIBLE);
+            tankVOs.add(setValue(Integer.parseInt(test1[4].trim()),Integer.parseInt(test1[5].trim())));
+                        /*}else{
+                            relativeLayoutThree.setVisibility(View.GONE);
+                        }*/
+
+            //if(Integer.parseInt(test1[7].trim()) != 0){
+            relativeLayoutFour.setVisibility(View.VISIBLE);
+            tankVOs.add(setValue(Integer.parseInt(test1[6].trim()),Integer.parseInt(test1[7].trim())));
+                        /*}else{
+                            relativeLayoutFour.setVisibility(View.GONE);
+                        }
+*/
+            //if(Integer.parseInt(test1[9].trim()) != 0){
+            relativeLayoutFive.setVisibility(View.VISIBLE);
+            tankVOs.add(setValue(Integer.parseInt(test1[8].trim()),Integer.parseInt(test1[9].trim())));
+                       /* }else{
+                            relativeLayoutFive.setVisibility(View.GONE);
+                        }
+
+                        if(Integer.parseInt(test1[11].trim()) != 0){*/
+            relativeLayoutSix.setVisibility(View.VISIBLE);
+            tankVOs.add(setValue(Integer.parseInt(test1[10].trim()),Integer.parseInt(test1[11].trim())));
+                        /*}else{
+                            relativeLayoutSix.setVisibility(View.GONE);
+                        }*/
+
+            String notification = "";
+            for (TankVO tankVO: tankVOs) {
+                SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+                smartDeviceDB.updateTankPercentage(tankVO);
+
+                if(tankVO.getPercentage() < 70){
+                    if(!notification.isEmpty()){
+                        notification = notification + " \nTank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                    }else {
+                        notification = "Tank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                    }
+                }
             }
 
-            if (Integer.parseInt(test1[3].trim()) != 0) {
-                relativeLayoutTwo.setVisibility(View.VISIBLE);
-                setValue(Integer.parseInt(test1[2].trim()), Integer.parseInt(test1[3].trim()));
-            } else {
-                relativeLayoutTwo.setVisibility(View.GONE);
-            }
+            if(!notification.isEmpty()) {
+                final Notification.Builder builder = new Notification.Builder(this);
+                builder.setStyle(new Notification.BigTextStyle()
+                        .bigText(notification)
+                        .setBigContentTitle("Albero water tank level")
+                        .setSummaryText("Please use water sparingly!"))
+                        .setSmallIcon(R.drawable.vem_logo);
 
-            if (Integer.parseInt(test1[5].trim()) != 0) {
-                relativeLayoutThree.setVisibility(View.VISIBLE);
-                setValue(Integer.parseInt(test1[4].trim()), Integer.parseInt(test1[5].trim()));
-            } else {
-                relativeLayoutThree.setVisibility(View.GONE);
+                final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                nm.notify(0, builder.build());
             }
-
-            if (Integer.parseInt(test1[7].trim()) != 0) {
-                relativeLayoutFour.setVisibility(View.VISIBLE);
-                setValue(Integer.parseInt(test1[6].trim()), Integer.parseInt(test1[7].trim()));
-            } else {
-                relativeLayoutFour.setVisibility(View.GONE);
-            }
-
-            if (Integer.parseInt(test1[9].trim()) != 0) {
-                relativeLayoutFive.setVisibility(View.VISIBLE);
-                setValue(Integer.parseInt(test1[8].trim()), Integer.parseInt(test1[9].trim()));
-            } else {
-                relativeLayoutFive.setVisibility(View.GONE);
-            }
-
-            if (Integer.parseInt(test1[11].trim()) != 0) {
-                relativeLayoutSix.setVisibility(View.VISIBLE);
-                setValue(Integer.parseInt(test1[10].trim()), Integer.parseInt(test1[11].trim()));
-            } else {
-                relativeLayoutSix.setVisibility(View.GONE);
-            }
-
             if (progress != null) {
                 progress.cancel();
             }
@@ -355,4 +425,6 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
+
+
 }
