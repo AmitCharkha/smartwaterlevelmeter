@@ -1,17 +1,15 @@
 package com.vem_tooling.smartwaterlevelmonitor.vo;
 
-import java.io.Serializable;
-
 /**
- * Created by amit on 20/6/17.
+ * Created by amit on 21/6/17.
  */
 
-public class AlarmSettingVO implements Serializable {
+public class HistoryVO {
 
     private int id;
     private int tankNo;
+    private long dateTime;
     private int percentage;
-    private int onOff;
     private long createdDate;
     private long updatedDate;
 
@@ -31,20 +29,20 @@ public class AlarmSettingVO implements Serializable {
         this.tankNo = tankNo;
     }
 
+    public long getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(long dateTime) {
+        this.dateTime = dateTime;
+    }
+
     public int getPercentage() {
         return percentage;
     }
 
     public void setPercentage(int percentage) {
         this.percentage = percentage;
-    }
-
-    public int getOnOff() {
-        return onOff;
-    }
-
-    public void setOnOff(int onOff) {
-        this.onOff = onOff;
     }
 
     public long getCreatedDate() {

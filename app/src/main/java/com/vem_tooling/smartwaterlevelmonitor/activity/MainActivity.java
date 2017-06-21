@@ -30,9 +30,12 @@ import com.vem_tooling.smartwaterlevelmonitor.db.SmartDeviceDB;
 import com.vem_tooling.smartwaterlevelmonitor.scroll_view.MultiScrollNumber;
 import com.vem_tooling.smartwaterlevelmonitor.utils.Constant;
 import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences;
+import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryVO;
 import com.vem_tooling.smartwaterlevelmonitor.vo.TankVO;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         if(new SmartDeviceSharedPreferences(getApplicationContext()).getIsAdmin() == 1) {
             if (id == R.id.history) {
-                Intent intent = new Intent(MainActivity.this, HistoryTemp.class);
+                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                 startActivity(intent);
             } else if (id == R.id.calibrate_sensor) {
                 Intent intent = new Intent(MainActivity.this, CalibrateSensor.class);
@@ -272,6 +275,43 @@ public class MainActivity extends AppCompatActivity
                             relativeLayoutSix.setVisibility(View.GONE);
                         }*/
 
+                        String notification = "";
+                        for (TankVO tankVO: tankVOs) {
+                            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+                            smartDeviceDB.updateTankPercentage(tankVO);
+
+                            if(tankVO.getPercentage() <= 70){
+                                if(tankVO.getPercentage() <= 25){
+                                    if(smartDeviceDB.isAlarmOn(tankVO.getTankNo(),25) == 1) {
+                                        if (!notification.isEmpty()) {
+                                            notification = notification + " \nTank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                                        } else {
+                                            notification = "Tank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                                        }
+                                    }
+                                }else{
+                                    if(smartDeviceDB.isAlarmOn(tankVO.getTankNo(),70) == 1) {
+                                        if (!notification.isEmpty()) {
+                                            notification = notification + " \nTank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                                        } else {
+                                            notification = "Tank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if(!notification.isEmpty()) {
+                            final Notification.Builder builder = new Notification.Builder(MainActivity.this);
+                            builder.setStyle(new Notification.BigTextStyle()
+                                    .bigText(notification)
+                                    .setBigContentTitle("Albero water tank level")
+                                    .setSummaryText("Please use water sparingly!"))
+                                    .setSmallIcon(R.drawable.vem_logo);
+
+                            final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                            nm.notify(0, builder.build());
+                        }
 
                         if(progress != null){
                             progress.cancel();
@@ -302,7 +342,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
             requestQueue.add(stringRequest);
         }catch (Exception e){
             if(progress != null){
@@ -398,17 +438,29 @@ public class MainActivity extends AppCompatActivity
                 SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
                 smartDeviceDB.updateTankPercentage(tankVO);
 
-                if(tankVO.getPercentage() < 70){
-                    if(!notification.isEmpty()){
-                        notification = notification + " \nTank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
-                    }else {
-                        notification = "Tank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                if(tankVO.getPercentage() <= 70){
+                    if(tankVO.getPercentage() <= 25){
+                        if(smartDeviceDB.isAlarmOn(tankVO.getTankNo(),25) == 1) {
+                            if (!notification.isEmpty()) {
+                                notification = notification + " \nTank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                            } else {
+                                notification = "Tank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                            }
+                        }
+                    }else{
+                        if(smartDeviceDB.isAlarmOn(tankVO.getTankNo(),70) == 1) {
+                            if (!notification.isEmpty()) {
+                                notification = notification + " \nTank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                            } else {
+                                notification = "Tank no " + tankVO.getTankNo() + " level is at " + tankVO.getPercentage() + "%";
+                            }
+                        }
                     }
                 }
             }
 
             if(!notification.isEmpty()) {
-                final Notification.Builder builder = new Notification.Builder(this);
+                final Notification.Builder builder = new Notification.Builder(MainActivity.this);
                 builder.setStyle(new Notification.BigTextStyle()
                         .bigText(notification)
                         .setBigContentTitle("Albero water tank level")
@@ -418,12 +470,59 @@ public class MainActivity extends AppCompatActivity
                 final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 nm.notify(0, builder.build());
             }
+
             if (progress != null) {
                 progress.cancel();
+            }
+
+            getHistoryTest(2,0,0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    void getHistory(int tankNo, int startValue, int endValue){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.GET_HISTORY, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        requestQueue.add(stringRequest);
+    }
+
+    void getHistoryTest(int tankNo, int startValue, int endValue){
+        try {
+            String response = "(01-06-17 18-09, 30,01-06-17 18-11, 35,01-06-17 18-14, 50,01-06-17 18-16, 60,01-06-17 18-20, 65,01-06-17 18-23, 70,01-06-17 18-26, 85,01-06-17 18-29, 90,01-06-17 18-32, 95:215)";
+            response = response.replace("(", "");
+            response = response.replace(")", "");
+            String args[] = response.split(":");
+
+            String args1[] = args[0].split(",");
+
+            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+            for (int i = 0; i < args1.length; i = i + 2) {
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+                String date = args1[i].trim() + "-00";
+                Date d = formatter.parse(date);
+                HistoryVO historyVO = new HistoryVO();
+                historyVO.setDateTime(d.getTime());
+                historyVO.setTankNo(tankNo);
+                historyVO.setPercentage(Integer.parseInt(args1[i+1].trim()));
+                smartDeviceDB.insertTankHistory(historyVO);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+
     }
 
 

@@ -6,11 +6,11 @@ package com.vem_tooling.smartwaterlevelmonitor.vo;
 
 public class TankVO {
 
-    int id;
-    int tankNo;
-    int percentage;
-    long createdDate;
-    long updatedDate;
+    private int id;
+    private int tankNo;
+    private int percentage;
+    private long createdDate;
+    private long updatedDate;
 
     public int getId() {
         return id;
