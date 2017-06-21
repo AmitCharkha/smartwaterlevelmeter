@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Calendar;
+
 /**
  * Created by amit on 15/6/17.
  */
@@ -38,6 +40,19 @@ public class SmartDeviceSharedPreferences {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putInt(Constant.SETUP_PAGE_NUMBER, number);
+        edit.commit();
+    }
+
+    public long getLastSync(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        long syncTime = sharedPreferences.getLong(Constant.SYNC_TIME, 0);
+        return syncTime;
+    }
+
+    public void setLastSync(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putLong(Constant.SYNC_TIME, Calendar.getInstance().getTimeInMillis());
         edit.commit();
     }
 }

@@ -30,13 +30,17 @@ import com.vem_tooling.smartwaterlevelmonitor.db.SmartDeviceDB;
 import com.vem_tooling.smartwaterlevelmonitor.scroll_view.MultiScrollNumber;
 import com.vem_tooling.smartwaterlevelmonitor.utils.Constant;
 import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences;
+import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryRequestVO;
 import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryVO;
 import com.vem_tooling.smartwaterlevelmonitor.vo.TankVO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static com.vem_tooling.smartwaterlevelmonitor.R.id.error;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,6 +48,9 @@ public class MainActivity extends AppCompatActivity
     private TextView refreshTextView,errorTextView;
     private RelativeLayout relativeLayoutOne,relativeLayoutTwo,relativeLayoutThree,relativeLayoutFour,relativeLayoutFive,relativeLayoutSix;
     private MultiScrollNumber scroll_number1,scroll_number2,scroll_number3,scroll_number4,scroll_number5,scroll_number6;
+
+    private int tankNo = 1;
+    private int startValue, endValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
 
         refreshTextView = (TextView) findViewById(R.id.refreshTextView);
-        errorTextView = (TextView) findViewById(R.id.error);
+        errorTextView = (TextView) findViewById(error);
 
         relativeLayoutOne = (RelativeLayout) findViewById(R.id.relativeLayoutOne);
         relativeLayoutTwo = (RelativeLayout) findViewById(R.id.relativeLayoutTwo);
@@ -100,14 +107,15 @@ public class MainActivity extends AppCompatActivity
         refreshTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getIntVal();
+                getActualValue();
             }
         });
 
         if(Constant.checkInternetConnection(getApplicationContext())) {
-            getIntValue();
+            getActualValue();
+            //doTesting();
         }else{
-            getValue();
+            getDBValue();
         }
     }
 
@@ -210,7 +218,7 @@ public class MainActivity extends AppCompatActivity
         return tankVO;
     }
 
-    void getIntVal(){
+    void getActualValue(){
         final ProgressDialog progress = new ProgressDialog(MainActivity.this);
         try{
             progress.setMessage("Please Wait...");
@@ -313,9 +321,18 @@ public class MainActivity extends AppCompatActivity
                             nm.notify(0, builder.build());
                         }
 
+                        long synTime = Calendar.getInstance().getTimeInMillis() - (1000*60*60);
+                        if(new SmartDeviceSharedPreferences(getApplicationContext()).getLastSync() < synTime) {
+                            HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                            startValue = historyRequestVO.getStartValue();
+                            endValue = historyRequestVO.getEndValue();
+                            getHistory();
+                        }
                         if(progress != null){
                             progress.cancel();
                         }
+
+
                         refreshTextView.setEnabled(true);
 
 
@@ -323,7 +340,7 @@ public class MainActivity extends AppCompatActivity
                         if(progress != null){
                             progress.cancel();
                         }
-                        errorTextView.setText(e.toString() + " \n\n " + response );
+                        errorTextView.setText(e.toString() + " \n\n " + response);
                         Toast.makeText(getApplicationContext(),"Error Occurred", Toast.LENGTH_LONG).show();
                         refreshTextView.setEnabled(true);
                     }
@@ -354,7 +371,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    void getValue(){
+    void getDBValue(){
         try {
             ProgressDialog progress = new ProgressDialog(MainActivity.this);
             progress.setMessage("Please Wait...");
@@ -377,7 +394,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    void getIntValue(){
+    void doTesting(){
 
         try {
             ProgressDialog progress = new ProgressDialog(MainActivity.this);
@@ -475,31 +492,102 @@ public class MainActivity extends AppCompatActivity
                 progress.cancel();
             }
 
-            getHistoryTest(2,0,0);
+            getHistoryTest(0,0);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
 
-    void getHistory(int tankNo, int startValue, int endValue){
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.GET_HISTORY, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
+    void getHistory(){
+        try {
+            if (endValue == 0 || endValue == 1000) {
+                startValue = 0;
+                endValue = 100;
+            } else {
+                int rem = endValue % 100;
+                rem = 100 - rem;
+                startValue = endValue;
+                endValue = startValue + rem;
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
 
-            }
-        });
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.GET_HISTORY + tankNo + "/" + startValue + "/" + endValue + "/", new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        if (!response.equals("(0)")) {
+                            response = response.replace("(", "");
+                            response = response.replace(")", "");
+                            String args[] = response.split(":");
 
-        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        requestQueue.add(stringRequest);
+                            String args1[] = args[0].split(",");
+
+                            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+                            String res = "More";
+                            for (int i = 0; i < args1.length; i = i + 2) {
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+                                String date = args1[i].trim() + "-00";
+                                Date d = formatter.parse(date);
+                                HistoryVO historyVO = new HistoryVO();
+                                historyVO.setDateTime(d.getTime());
+                                historyVO.setTankNo(tankNo);
+                                historyVO.setPercentage(Integer.parseInt(args1[i + 1].trim()));
+                                res = smartDeviceDB.insertTankHistory(historyVO);
+                                if (res.equals("Change")) {
+                                    break;
+                                }
+                            }
+                            if (res.equals("More")) {
+                                startValue = Integer.parseInt(args[1]);
+                                endValue = Integer.parseInt(args[1]);
+                                getHistory();
+                            } else {
+                                HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
+                                historyRequestVO1.setTankNo(tankNo);
+                                historyRequestVO1.setStartValue(startValue);
+                                historyRequestVO1.setEndValue(endValue);
+                                smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
+                                if (tankNo < 6) {
+                                    tankNo = tankNo + 1;
+                                    HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                                    startValue = historyRequestVO.getStartValue();
+                                    endValue = historyRequestVO.getEndValue();
+                                    getHistory();
+                                }else{
+                                    new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
+                                }
+                            }
+                        } else {
+                            if (tankNo < 6) {
+                                tankNo = tankNo + 1;
+                                HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                                startValue = historyRequestVO.getStartValue();
+                                endValue = historyRequestVO.getEndValue();
+                                getHistory();
+                            }else{
+                                new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+
+            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+            requestQueue.add(stringRequest);
+        }catch (Exception e){
+            Toast.makeText(MainActivity.this,"Error occurred",Toast.LENGTH_SHORT).show();
+        }
     }
 
-    void getHistoryTest(int tankNo, int startValue, int endValue){
+    void getHistoryTest(int startValue, int endValue){
         try {
             String response = "(01-06-17 18-09, 30,01-06-17 18-11, 35,01-06-17 18-14, 50,01-06-17 18-16, 60,01-06-17 18-20, 65,01-06-17 18-23, 70,01-06-17 18-26, 85,01-06-17 18-29, 90,01-06-17 18-32, 95:215)";
             response = response.replace("(", "");

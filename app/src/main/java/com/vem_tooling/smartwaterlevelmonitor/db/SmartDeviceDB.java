@@ -324,8 +324,8 @@ public class SmartDeviceDB {
      * @param historyVO
      * @return
      */
-    public int insertTankHistory(HistoryVO historyVO){
-        int res = 0;
+    public String insertTankHistory(HistoryVO historyVO){
+        String res = "More";
         SmartDeviceDBHelper smartDeviceDBHelper = new SmartDeviceDBHelper(context);
         SQLiteDatabase db = smartDeviceDBHelper.getWritableDatabase();
         try{
@@ -337,6 +337,8 @@ public class SmartDeviceDB {
             contentValues.put("updatedDate", Calendar.getInstance().getTimeInMillis());
             if(getCountForHistoryRecord(historyVO) == 0){
                 db.insert("history", null, contentValues);
+            }else{
+                res = "Change";
             }
         }catch (SQLiteException e){
             System.out.println("Error : " + e.toString());
