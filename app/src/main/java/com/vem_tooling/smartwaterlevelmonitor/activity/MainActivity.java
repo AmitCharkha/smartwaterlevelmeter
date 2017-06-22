@@ -492,7 +492,7 @@ public class MainActivity extends AppCompatActivity
                 progress.cancel();
             }
 
-            getHistoryTest(0,0);
+            getHistoryTest();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -501,6 +501,13 @@ public class MainActivity extends AppCompatActivity
 
     void getHistory(){
         try {
+            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+            HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
+            historyRequestVO1.setTankNo(tankNo);
+            historyRequestVO1.setStartValue(startValue);
+            historyRequestVO1.setEndValue(endValue);
+            smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
+
             if (endValue == 0 || endValue == 1000) {
                 startValue = 0;
                 endValue = 100;
@@ -542,11 +549,7 @@ public class MainActivity extends AppCompatActivity
                                 endValue = Integer.parseInt(args[1]);
                                 getHistory();
                             } else {
-                                HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
-                                historyRequestVO1.setTankNo(tankNo);
-                                historyRequestVO1.setStartValue(startValue);
-                                historyRequestVO1.setEndValue(endValue);
-                                smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
+
                                 if (tankNo < 6) {
                                     tankNo = tankNo + 1;
                                     HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
@@ -587,7 +590,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    void getHistoryTest(int startValue, int endValue){
+    void getHistoryTest(){
         try {
             String response = "(01-06-17 18-09, 30,01-06-17 18-11, 35,01-06-17 18-14, 50,01-06-17 18-16, 60,01-06-17 18-20, 65,01-06-17 18-23, 70,01-06-17 18-26, 85,01-06-17 18-29, 90,01-06-17 18-32, 95:215)";
             response = response.replace("(", "");

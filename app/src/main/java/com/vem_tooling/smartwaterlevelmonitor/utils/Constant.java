@@ -28,6 +28,7 @@ public class Constant {
      * Other required field
      */
     public static String ADMIN_PASSWORD = "Albero@123";
+    //public static String WIFI_SSID = "\"Smart Water Level Monitor\"";
     public static String WIFI_SSID = "\"iSynergy-AP\"";
 
     /**
