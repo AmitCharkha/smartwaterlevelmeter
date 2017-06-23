@@ -1,6 +1,9 @@
 package com.vem_tooling.smartwaterlevelmonitor.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +24,7 @@ import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by amit on 2/6/17.
@@ -93,102 +97,204 @@ public class CalibrateSensor extends AppCompatActivity {
             calibrateTank1_Top.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 1", Toast.LENGTH_LONG).show();
-                    calibrateTankTopLevel(1);
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 1", Toast.LENGTH_LONG).show();
+                        calibrateTankTopLevel(1);
+                    }else{
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank2_Top.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 2", Toast.LENGTH_LONG).show();
-                    calibrateTankTopLevel(2);
-
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 2", Toast.LENGTH_LONG).show();
+                        calibrateTankTopLevel(2);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank3_Top.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 3", Toast.LENGTH_LONG).show();
-                    calibrateTankTopLevel(3);
-
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 3", Toast.LENGTH_LONG).show();
+                        calibrateTankTopLevel(3);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank4_Top.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 4", Toast.LENGTH_LONG).show();
-                    calibrateTankTopLevel(4);
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 4", Toast.LENGTH_LONG).show();
+                        calibrateTankTopLevel(4);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank5_Top.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 5", Toast.LENGTH_LONG).show();
-                    calibrateTankTopLevel(5);
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 5", Toast.LENGTH_LONG).show();
+                        calibrateTankTopLevel(5);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank6_Top.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 6", Toast.LENGTH_LONG).show();
-                    calibrateTankTopLevel(6);
-
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 6", Toast.LENGTH_LONG).show();
+                        calibrateTankTopLevel(6);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank1_Bottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 1", Toast.LENGTH_LONG).show();
-                    calibrateTankBottomLevel(1);
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 1", Toast.LENGTH_LONG).show();
+                        calibrateTankBottomLevel(1);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank2_Bottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 2", Toast.LENGTH_LONG).show();
-                    calibrateTankBottomLevel(2);
-
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 2", Toast.LENGTH_LONG).show();
+                        calibrateTankBottomLevel(2);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank3_Bottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 3", Toast.LENGTH_LONG).show();
-                    calibrateTankBottomLevel(3);
-
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 3", Toast.LENGTH_LONG).show();
+                        calibrateTankBottomLevel(3);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank4_Bottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 4", Toast.LENGTH_LONG).show();
-                    calibrateTankBottomLevel(4);
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 4", Toast.LENGTH_LONG).show();
+                        calibrateTankBottomLevel(4);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank5_Bottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 5", Toast.LENGTH_LONG).show();
-                    calibrateTankBottomLevel(5);
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 5", Toast.LENGTH_LONG).show();
+                        calibrateTankBottomLevel(5);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
 
             calibrateTank6_Bottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 6", Toast.LENGTH_LONG).show();
-                    calibrateTankBottomLevel(6);
-
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                        Toast.makeText(CalibrateSensor.this, "Calibrating Sensor of Tank 6", Toast.LENGTH_LONG).show();
+                        calibrateTankBottomLevel(6);
+                    }else {
+                        new SweetAlertDialog(CalibrateSensor.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops..")
+                                .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                .show();
+                    }
                 }
             });
         }catch (Exception e){

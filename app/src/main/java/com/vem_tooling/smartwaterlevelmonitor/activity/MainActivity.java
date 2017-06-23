@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -39,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.vem_tooling.smartwaterlevelmonitor.R.id.error;
 
@@ -107,14 +111,37 @@ public class MainActivity extends AppCompatActivity
         refreshTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActualValue();
+                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+                if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)) {
+                    getActualValue();
+                }else{
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Oops..")
+                            .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                            .show();
+                }
             }
         });
 
         if(Constant.checkInternetConnection(getApplicationContext())) {
-            getActualValue();
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+            if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
+                getActualValue();
+            }else {
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                        .setTitleText("Info")
+                        .setContentText("You are not connected with tank wifi.")
+                        .show();
+
+                getDBValue();
+            }
             //doTesting();
         }else{
+            Toast.makeText(getApplicationContext(),"Connect with tank wifi to get updated information",Toast.LENGTH_LONG).show();
             getDBValue();
         }
     }
@@ -321,8 +348,9 @@ public class MainActivity extends AppCompatActivity
                             nm.notify(0, builder.build());
                         }
 
-                        long synTime = Calendar.getInstance().getTimeInMillis() - (1000*60*60);
+                        long synTime = Calendar.getInstance().getTimeInMillis() - (1000*60*10); // 10 minutes
                         if(new SmartDeviceSharedPreferences(getApplicationContext()).getLastSync() < synTime) {
+                            new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
                             HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
                             startValue = historyRequestVO.getStartValue();
                             endValue = historyRequestVO.getEndValue();
@@ -388,7 +416,7 @@ public class MainActivity extends AppCompatActivity
                 progress.cancel();
             }
 
-            Toast.makeText(getApplicationContext(),"Connect to tank wifi to get updated value", Toast.LENGTH_LONG).show();
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -501,15 +529,9 @@ public class MainActivity extends AppCompatActivity
 
     void getHistory(){
         try {
-            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
-            HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
-            historyRequestVO1.setTankNo(tankNo);
-            historyRequestVO1.setStartValue(startValue);
-            historyRequestVO1.setEndValue(endValue);
-            smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
 
-            if (endValue == 0 || endValue == 1000) {
-                startValue = 0;
+            if (endValue == 0 || endValue == 1 || endValue == 1001 || endValue == 1000) {
+                startValue = 1;
                 endValue = 100;
             } else {
                 int rem = endValue % 100;
@@ -541,6 +563,11 @@ public class MainActivity extends AppCompatActivity
                                 historyVO.setPercentage(Integer.parseInt(args1[i + 1].trim()));
                                 res = smartDeviceDB.insertTankHistory(historyVO);
                                 if (res.equals("Change")) {
+                                    // It should be minus to but we are starting from zero that's why minus one
+                                    // When we find change it will access value which is repeated to keep end value as last new value we need to minus i by 2.
+                                    // i / 2 is required as we have 2 item for one value item 1 : date and item 2 : percentage
+                                    i = i - 1;
+                                    endValue = startValue + (i / 2);
                                     break;
                                 }
                             }
@@ -549,7 +576,11 @@ public class MainActivity extends AppCompatActivity
                                 endValue = Integer.parseInt(args[1]);
                                 getHistory();
                             } else {
-
+                                HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
+                                historyRequestVO1.setTankNo(tankNo);
+                                historyRequestVO1.setStartValue(startValue);
+                                historyRequestVO1.setEndValue(endValue + 1);
+                                smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
                                 if (tankNo < 6) {
                                     tankNo = tankNo + 1;
                                     HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
@@ -561,6 +592,12 @@ public class MainActivity extends AppCompatActivity
                                 }
                             }
                         } else {
+                            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+                            HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
+                            historyRequestVO1.setTankNo(tankNo);
+                            historyRequestVO1.setStartValue(startValue);
+                            historyRequestVO1.setEndValue(endValue + 1);
+                            smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
                             if (tankNo < 6) {
                                 tankNo = tankNo + 1;
                                 HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);

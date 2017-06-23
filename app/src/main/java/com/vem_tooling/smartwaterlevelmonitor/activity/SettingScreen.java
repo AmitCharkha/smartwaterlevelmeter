@@ -1,7 +1,10 @@
 package com.vem_tooling.smartwaterlevelmonitor.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +32,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by amit on 15/6/17.
@@ -77,7 +81,17 @@ public class SettingScreen extends AppCompatActivity {
         setRtc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRtc();
+                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+                if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
+                    setRtc();
+                }else {
+                    new SweetAlertDialog(SettingScreen.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Oops..")
+                            .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                            .show();
+                }
             }
         });
 
@@ -152,9 +166,9 @@ public class SettingScreen extends AppCompatActivity {
                                         progress.cancel();
                                     }
                                     try {
-                                         if(response.equals("(0)")) {
-                                             Toast.makeText(SettingScreen.this,"RTC time set successfully",Toast.LENGTH_LONG).show();
-                                         }
+                                        if(response.equals("(0)")) {
+                                            Toast.makeText(SettingScreen.this,"RTC time set successfully",Toast.LENGTH_LONG).show();
+                                        }
 
                                     } catch (Exception e) {
                                         Toast.makeText(SettingScreen.this, "Error occurred", Toast.LENGTH_LONG).show();
