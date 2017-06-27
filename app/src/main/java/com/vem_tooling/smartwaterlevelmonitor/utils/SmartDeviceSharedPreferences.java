@@ -45,14 +45,29 @@ public class SmartDeviceSharedPreferences {
 
     public long getLastSync(){
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
-        long syncTime = sharedPreferences.getLong(Constant.SYNC_TIME, 0);
+        long syncTime = sharedPreferences.getLong(Constant.HISTORY_SYNC_TIME, 0);
         return syncTime;
     }
 
     public void setLastSync(){
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putLong(Constant.SYNC_TIME, Calendar.getInstance().getTimeInMillis());
+        edit.putLong(Constant.HISTORY_SYNC_TIME, Calendar.getInstance().getTimeInMillis());
         edit.commit();
     }
+
+    public long getCurrentValueLastSync(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        long syncTime = sharedPreferences.getLong(Constant.CURRENT_VALUE_SYNC_TIME, 0);
+        return syncTime;
+    }
+
+    public void setCurrentValueLastSync(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putLong(Constant.CURRENT_VALUE_SYNC_TIME, Calendar.getInstance().getTimeInMillis());
+        edit.commit();
+    }
+
+
 }

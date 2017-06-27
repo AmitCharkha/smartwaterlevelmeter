@@ -28,8 +28,8 @@ public class Constant {
      * Other required field
      */
     public static String ADMIN_PASSWORD = "Albero@123";
-    //public static String WIFI_SSID = "\"Smart Water Level Monitor\"";
-    public static String WIFI_SSID = "\"iSynergy-AP\"";
+    public static String WIFI_SSID = "\"Smart Water Level Monitor\"";
+    //public static String WIFI_SSID = "\"iSynergy-AP\"";
 
     /**
      * Shared Preferences variable
@@ -37,7 +37,8 @@ public class Constant {
     public static String SMARTDEVICE_PREF = "SMARTDEVICE_PREF";
     public static String IS_ADMIN = "IS_ADMIN";
     public static String SETUP_PAGE_NUMBER = "SETUP_PAGE_NUMBER";
-    public static String SYNC_TIME = "SYNC_TIME";
+    public static String HISTORY_SYNC_TIME = "HISTORY_SYNC_TIME";
+    public static String CURRENT_VALUE_SYNC_TIME = "CURRENT_VALUE_SYNC_TIME";
 
     public static boolean checkInternetConnection(Context context) {
 

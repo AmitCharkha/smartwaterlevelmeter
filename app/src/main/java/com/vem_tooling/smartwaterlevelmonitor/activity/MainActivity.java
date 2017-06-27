@@ -13,12 +13,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -28,8 +28,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vem_tooling.smartwaterlevelmonitor.R;
+import com.vem_tooling.smartwaterlevelmonitor.adapter.TankAdapter;
 import com.vem_tooling.smartwaterlevelmonitor.db.SmartDeviceDB;
-import com.vem_tooling.smartwaterlevelmonitor.scroll_view.MultiScrollNumber;
+import com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoRegularTextView;
 import com.vem_tooling.smartwaterlevelmonitor.utils.Constant;
 import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences;
 import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryRequestVO;
@@ -44,17 +45,19 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.vem_tooling.smartwaterlevelmonitor.R.id.error;
+//import static com.vem_tooling.smartwaterlevelmonitor.R.id.error;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private TextView refreshTextView,errorTextView;
-    private RelativeLayout relativeLayoutOne,relativeLayoutTwo,relativeLayoutThree,relativeLayoutFour,relativeLayoutFive,relativeLayoutSix;
-    private MultiScrollNumber scroll_number1,scroll_number2,scroll_number3,scroll_number4,scroll_number5,scroll_number6;
+    private LatoRegularTextView refreshTextView,lastSyncTextView;
+    //private RelativeLayout relativeLayoutOne,relativeLayoutTwo,relativeLayoutThree,relativeLayoutFour,relativeLayoutFive,relativeLayoutSix;
+    //private MultiScrollNumber scroll_number1,scroll_number2,scroll_number3,scroll_number4,scroll_number5,scroll_number6;
 
     private int tankNo = 1;
     private int startValue, endValue;
+    private RecyclerView recyclerView;
+    private TankAdapter tankAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +66,12 @@ public class MainActivity extends AppCompatActivity
 
         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
 
-        refreshTextView = (TextView) findViewById(R.id.refreshTextView);
-        errorTextView = (TextView) findViewById(error);
+        refreshTextView = (LatoRegularTextView) findViewById(R.id.refreshTextView);
+        lastSyncTextView = (LatoRegularTextView) findViewById(R.id.lastSyncTextView);
+        recyclerView = (RecyclerView)findViewById(R.id.tankList);
+        //errorTextView = (TextView) findViewById(error);
 
-        relativeLayoutOne = (RelativeLayout) findViewById(R.id.relativeLayoutOne);
+       /* relativeLayoutOne = (RelativeLayout) findViewById(R.id.relativeLayoutOne);
         relativeLayoutTwo = (RelativeLayout) findViewById(R.id.relativeLayoutTwo);
         relativeLayoutThree = (RelativeLayout) findViewById(R.id.relativeLayoutThree);
         relativeLayoutFour = (RelativeLayout) findViewById(R.id.relativeLayoutFour);
@@ -78,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         scroll_number3 = (MultiScrollNumber) findViewById(R.id.scroll_number3);
         scroll_number4 = (MultiScrollNumber) findViewById(R.id.scroll_number4);
         scroll_number5 = (MultiScrollNumber) findViewById(R.id.scroll_number5);
-        scroll_number6 = (MultiScrollNumber) findViewById(R.id.scroll_number6);
+        scroll_number6 = (MultiScrollNumber) findViewById(R.id.scroll_number6);*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -124,6 +129,8 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
+        updateSyncTextView();
 
         if(Constant.checkInternetConnection(getApplicationContext())) {
             WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -210,7 +217,7 @@ public class MainActivity extends AppCompatActivity
 
     TankVO setValue(int no,int val){
 
-        switch (no){
+        /*switch (no){
             case  1:
                 scroll_number1.setNumber(val);
                 scroll_number1.setTextSize(80);
@@ -236,7 +243,7 @@ public class MainActivity extends AppCompatActivity
                 scroll_number6.setTextSize(80);
                 break;
 
-        }
+        }*/
 
         TankVO tankVO = new TankVO();
         tankVO.setTankNo(no);
@@ -269,46 +276,52 @@ public class MainActivity extends AppCompatActivity
                         str2 = new StringBuilder(test1[11].trim());
                         test1[11] = str2.deleteCharAt(str2.indexOf(")")).toString();
                         //if(Integer.parseInt(test1[1].trim()) != 0){
-                        relativeLayoutOne.setVisibility(View.VISIBLE);
+                        //relativeLayoutOne.setVisibility(View.VISIBLE);
                         tankVOs.add(setValue(Integer.parseInt(test1[0].trim()),Integer.parseInt(test1[1].trim())));
                         /*}else{
                             relativeLayoutOne.setVisibility(View.GONE);
                         }*/
 
                         //if(Integer.parseInt(test1[3].trim()) != 0){
-                        relativeLayoutTwo.setVisibility(View.VISIBLE);
+                        //relativeLayoutTwo.setVisibility(View.VISIBLE);
                         tankVOs.add(setValue(Integer.parseInt(test1[2].trim()),Integer.parseInt(test1[3].trim())));
                         /*}else{
                             relativeLayoutTwo.setVisibility(View.GONE);
                         }*/
 
                         //if(Integer.parseInt(test1[5].trim()) != 0){
-                        relativeLayoutThree.setVisibility(View.VISIBLE);
+                        //relativeLayoutThree.setVisibility(View.VISIBLE);
                         tankVOs.add(setValue(Integer.parseInt(test1[4].trim()),Integer.parseInt(test1[5].trim())));
                         /*}else{
                             relativeLayoutThree.setVisibility(View.GONE);
                         }*/
 
                         //if(Integer.parseInt(test1[7].trim()) != 0){
-                        relativeLayoutFour.setVisibility(View.VISIBLE);
+                        //relativeLayoutFour.setVisibility(View.VISIBLE);
                         tankVOs.add(setValue(Integer.parseInt(test1[6].trim()),Integer.parseInt(test1[7].trim())));
                         /*}else{
                             relativeLayoutFour.setVisibility(View.GONE);
                         }
 */
                         //if(Integer.parseInt(test1[9].trim()) != 0){
-                        relativeLayoutFive.setVisibility(View.VISIBLE);
+                        //relativeLayoutFive.setVisibility(View.VISIBLE);
                         tankVOs.add(setValue(Integer.parseInt(test1[8].trim()),Integer.parseInt(test1[9].trim())));
                        /* }else{
                             relativeLayoutFive.setVisibility(View.GONE);
                         }
 
                         if(Integer.parseInt(test1[11].trim()) != 0){*/
-                        relativeLayoutSix.setVisibility(View.VISIBLE);
+                        //relativeLayoutSix.setVisibility(View.VISIBLE);
                         tankVOs.add(setValue(Integer.parseInt(test1[10].trim()),Integer.parseInt(test1[11].trim())));
                         /*}else{
                             relativeLayoutSix.setVisibility(View.GONE);
                         }*/
+
+
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                        recyclerView.setLayoutManager(mLayoutManager);
+                        tankAdapter = new TankAdapter(getApplicationContext(), tankVOs);
+                        recyclerView.setAdapter(tankAdapter);
 
                         String notification = "";
                         for (TankVO tankVO: tankVOs) {
@@ -368,7 +381,7 @@ public class MainActivity extends AppCompatActivity
                         if(progress != null){
                             progress.cancel();
                         }
-                        errorTextView.setText(e.toString() + " \n\n " + response);
+                        //errorTextView.setText(e.toString() + " \n\n " + response);
                         Toast.makeText(getApplicationContext(),"Error Occurred", Toast.LENGTH_LONG).show();
                         refreshTextView.setEnabled(true);
                     }
@@ -382,7 +395,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     Toast.makeText(getApplicationContext(),"Error Occurred", Toast.LENGTH_LONG).show();
                     error.getMessage();
-                    errorTextView.setText( error.getMessage());
+                    //errorTextView.setText( error.getMessage());
                     refreshTextView.setEnabled(true);
                 }
             });
@@ -393,7 +406,7 @@ public class MainActivity extends AppCompatActivity
             if(progress != null){
                 progress.cancel();
             }
-            errorTextView.setText(e.toString());
+            //errorTextView.setText(e.toString());
             Toast.makeText(getApplicationContext(),"Error Occurred", Toast.LENGTH_LONG).show();
             refreshTextView.setEnabled(true);
         }
@@ -429,7 +442,7 @@ public class MainActivity extends AppCompatActivity
             progress.setMessage("Please Wait...");
             progress.show();
             String response = "( 1,25,2, 50,3,75, 4,0,5, 0,6, 0)";
-            errorTextView.setText(response);
+            //errorTextView.setText(response);
             String test1[] = response.split(",");
             StringBuilder str2 = new StringBuilder(test1[0].trim());
             test1[0] = str2.deleteCharAt(str2.indexOf("(")).toString();
@@ -437,47 +450,53 @@ public class MainActivity extends AppCompatActivity
             test1[11] = str2.deleteCharAt(str2.indexOf(")")).toString();
             //if(Integer.parseInt(test1[1].trim()) != 0){
             List<TankVO> tankVOs = new ArrayList<>();
-            relativeLayoutOne.setVisibility(View.VISIBLE);
+            //relativeLayoutOne.setVisibility(View.VISIBLE);
             tankVOs.add(setValue(Integer.parseInt(test1[0].trim()),Integer.parseInt(test1[1].trim())));
                         /*}else{
                             relativeLayoutOne.setVisibility(View.GONE);
                         }*/
 
             //if(Integer.parseInt(test1[3].trim()) != 0){
-            relativeLayoutTwo.setVisibility(View.VISIBLE);
+            //relativeLayoutTwo.setVisibility(View.VISIBLE);
             tankVOs.add(setValue(Integer.parseInt(test1[2].trim()),Integer.parseInt(test1[3].trim())));
                         /*}else{
                             relativeLayoutTwo.setVisibility(View.GONE);
                         }*/
 
             //if(Integer.parseInt(test1[5].trim()) != 0){
-            relativeLayoutThree.setVisibility(View.VISIBLE);
+            //relativeLayoutThree.setVisibility(View.VISIBLE);
             tankVOs.add(setValue(Integer.parseInt(test1[4].trim()),Integer.parseInt(test1[5].trim())));
                         /*}else{
                             relativeLayoutThree.setVisibility(View.GONE);
                         }*/
 
             //if(Integer.parseInt(test1[7].trim()) != 0){
-            relativeLayoutFour.setVisibility(View.VISIBLE);
+            //relativeLayoutFour.setVisibility(View.VISIBLE);
             tankVOs.add(setValue(Integer.parseInt(test1[6].trim()),Integer.parseInt(test1[7].trim())));
                         /*}else{
                             relativeLayoutFour.setVisibility(View.GONE);
                         }
 */
             //if(Integer.parseInt(test1[9].trim()) != 0){
-            relativeLayoutFive.setVisibility(View.VISIBLE);
+            //relativeLayoutFive.setVisibility(View.VISIBLE);
             tankVOs.add(setValue(Integer.parseInt(test1[8].trim()),Integer.parseInt(test1[9].trim())));
                        /* }else{
                             relativeLayoutFive.setVisibility(View.GONE);
                         }
 
                         if(Integer.parseInt(test1[11].trim()) != 0){*/
-            relativeLayoutSix.setVisibility(View.VISIBLE);
+            //relativeLayoutSix.setVisibility(View.VISIBLE);
             tankVOs.add(setValue(Integer.parseInt(test1[10].trim()),Integer.parseInt(test1[11].trim())));
                         /*}else{
                             relativeLayoutSix.setVisibility(View.GONE);
                         }*/
 
+
+
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            tankAdapter = new TankAdapter(getApplicationContext(), tankVOs);
+            recyclerView.setAdapter(tankAdapter);
             String notification = "";
             for (TankVO tankVO: tankVOs) {
                 SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
@@ -519,6 +538,8 @@ public class MainActivity extends AppCompatActivity
             if (progress != null) {
                 progress.cancel();
             }
+
+            new SmartDeviceSharedPreferences(getApplicationContext()).setCurrentValueLastSync();
 
             getHistoryTest();
         }catch (Exception e){
@@ -651,6 +672,16 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
+    }
+
+    void updateSyncTextView(){
+        if(new SmartDeviceSharedPreferences(getApplicationContext()).getCurrentValueLastSync() > 0){
+            Date date = new Date(new SmartDeviceSharedPreferences(getApplicationContext()).getCurrentValueLastSync());
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            lastSyncTextView.setText("Last refreshed time : " + formatter.format(date).toString());
+        }else{
+            lastSyncTextView.setText("");
+        }
     }
 
 

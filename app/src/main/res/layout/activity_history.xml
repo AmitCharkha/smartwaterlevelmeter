@@ -19,7 +19,7 @@
             android:textSize="24sp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Alarm Setting"
+            android:text="History"
             android:layout_height="wrap_content" />
 
         <com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoLightItalicTextView

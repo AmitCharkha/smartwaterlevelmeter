@@ -23,6 +23,7 @@ import com.vem_tooling.smartwaterlevelmonitor.R;
 import com.vem_tooling.smartwaterlevelmonitor.db.SmartDeviceDB;
 import com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoLightItalicTextView;
 import com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoRegularTextView;
+import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences;
 import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryVO;
 
 import org.angmarch.views.NiceSpinner;
@@ -231,6 +232,13 @@ public class HistoryActivity extends AppCompatActivity {
                 chart.animateXY(2000, 2000);
                 chart.invalidate();
             }else{
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                Date date2 = new Date(new SmartDeviceSharedPreferences(getApplicationContext()).getLastSync());
+                if(new SmartDeviceSharedPreferences(getApplicationContext()).getLastSync() > 0) {
+                    noDataAvailable.setText("No record found for selected date \n \n Last history updated on \n" + formatter1.format(date2));
+                }else{
+                    noDataAvailable.setText("Please update history for first time \nfrom\nSetting ---> Update Tank History");
+                }
                 noDataAvailable.setVisibility(View.VISIBLE);
                 chart.setVisibility(View.GONE);
             }
