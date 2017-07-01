@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp"
+    android:layout_height="wrap_content">
+
+
+    <com.vem_tooling.smartwaterlevelmonitor.font_text_view.CorisandeBoldTextView
+        android:id="@+id/tankNoTextView"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="Tank no 1"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/OneTextView"
+        android:background="@color/green"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/tankNoTextView"
+        android:layout_height="@dimen/height" />
+
+    <View
+        android:id="@+id/TwoTextView"
+        android:layout_below="@+id/OneTextView"
+        android:background="@color/green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+    <View
+        android:id="@+id/ThreeTextView"
+        android:layout_below="@+id/TwoTextView"
+        android:background="@color/green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+
+    <View
+        android:id="@+id/FourTextView"
+        android:layout_below="@+id/ThreeTextView"
+        android:background="@color/yellow_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+
+    <View
+        android:id="@+id/FiveTextView"
+        android:layout_below="@+id/FourTextView"
+        android:background="@color/yellow_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+    <View
+        android:id="@+id/SixTextView"
+        android:layout_below="@+id/FiveTextView"
+        android:background="@color/yellow_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+    <View
+        android:id="@+id/SevenTextView"
+        android:layout_below="@+id/SixTextView"
+        android:background="@color/yellow_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+    <View
+        android:id="@+id/EightTextView"
+        android:layout_below="@+id/SevenTextView"
+        android:background="@color/red_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+    <View
+        android:id="@+id/NineTextView"
+        android:layout_below="@+id/EightTextView"
+        android:background="@color/red_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+    <View
+        android:id="@+id/TenTextView"
+        android:layout_below="@+id/NineTextView"
+        android:background="@color/red_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height" />
+
+    <TextView
+        android:id="@+id/bottomLine"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/TenTextView"
+        android:background="@color/colorPrimary"
+        android:layout_height="2dp" />
+
+    <TextView
+        android:id="@+id/leftLine"
+        android:layout_width="2dp"
+        android:layout_alignTop="@+id/OneTextView"
+        android:layout_alignBottom="@+id/TenTextView"
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/rightLine"
+        android:layout_width="2dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/OneTextView"
+        android:layout_alignBottom="@+id/TenTextView"
+        android:layout_height="wrap_content" />
+
+
+    <com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoRegularTextView
+        android:layout_width="wrap_content"
+        android:id="@+id/tankLevelTextView"
+        android:layout_below="@+id/bottomLine"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

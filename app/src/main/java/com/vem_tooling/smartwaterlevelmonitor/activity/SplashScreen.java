@@ -23,22 +23,39 @@ public class SplashScreen extends AppCompatActivity {
 
         try {
             if (new SmartDeviceSharedPreferences(getApplicationContext()).getSetupPageNumber() == 2) {
-                Bundle bundle = new Bundle();
-                bundle.putString("activityName", "SplashScreen");
-                View easySplashScreenView = new EasySplashScreen(SplashScreen.this)
-                        .withFullScreen()
-                        .withTargetActivity(CalibrateSensor.class)
-                        .withBundleExtras(bundle)
-                        .withSplashTimeOut(2000)
-                        .withBackgroundResource(android.R.color.holo_red_light)
-                        .withHeaderText("")
-                        .withFooterText("Copyright 2017")
-                        .withBeforeLogoText("VEM Tooling Pvt Ltd")
-                        .withLogo(R.drawable.vem_logo)
-                        .withAfterLogoText("Smart Water Level Monitor")
-                        .create();
-
-                setContentView(easySplashScreenView);
+                if(new SmartDeviceSharedPreferences(getApplicationContext()).getIsAdmin() == 1){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("activityName", "SplashScreen");
+                    View easySplashScreenView = new EasySplashScreen(SplashScreen.this)
+                            .withFullScreen()
+                            .withTargetActivity(CalibrateSensor.class)
+                            .withBundleExtras(bundle)
+                            .withSplashTimeOut(2000)
+                            .withBackgroundResource(android.R.color.holo_red_light)
+                            .withHeaderText("")
+                            .withFooterText("Copyright 2017")
+                            .withBeforeLogoText("VEM Tooling Pvt Ltd")
+                            .withLogo(R.drawable.vem_logo)
+                            .withAfterLogoText("Smart Water Level Monitor")
+                            .create();
+                    setContentView(easySplashScreenView);
+                }else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("activityName", "SplashScreen");
+                    View easySplashScreenView = new EasySplashScreen(SplashScreen.this)
+                            .withFullScreen()
+                            .withTargetActivity(MainActivity.class)
+                            .withBundleExtras(bundle)
+                            .withSplashTimeOut(2000)
+                            .withBackgroundResource(android.R.color.holo_red_light)
+                            .withHeaderText("")
+                            .withFooterText("Copyright 2017")
+                            .withBeforeLogoText("VEM Tooling Pvt Ltd")
+                            .withLogo(R.drawable.vem_logo)
+                            .withAfterLogoText("Smart Water Level Monitor")
+                            .create();
+                    setContentView(easySplashScreenView);
+                }
             } else if (new SmartDeviceSharedPreferences(getApplicationContext()).getSetupPageNumber() == 3) {
                 View easySplashScreenView = new EasySplashScreen(SplashScreen.this)
                         .withFullScreen()

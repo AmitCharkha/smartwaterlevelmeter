@@ -8,7 +8,7 @@
     tools:context="com.vem_tooling.smartwaterlevelmonitor.activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <TextView
+    <com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoRegularTextView
         android:id="@+id/refreshTextView"
         android:layout_width="wrap_content"
         android:text="Refresh"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content" />
 
 
-    <ScrollView
+    <!--<ScrollView
         android:layout_below="@+id/refreshTextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -227,10 +227,27 @@
                 android:id="@+id/error"
                 android:layout_width="match_parent"
                 android:padding="10dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content" />
 
 
         </LinearLayout>
-    </ScrollView>
+    </ScrollView>-->
 
+    <com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoRegularTextView
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/refreshTextView"
+        android:id="@+id/lastSyncTextView"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tankList"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/lastSyncTextView"
+        android:layout_height="match_parent">
+
+
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

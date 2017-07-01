@@ -54,7 +54,6 @@ public class HistoryTemp extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        //This is test again
         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

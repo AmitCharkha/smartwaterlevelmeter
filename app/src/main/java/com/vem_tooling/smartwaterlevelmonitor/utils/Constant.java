@@ -1,5 +1,8 @@
 package com.vem_tooling.smartwaterlevelmonitor.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 /**
  * Created by amit on 2/6/17.
  */
@@ -25,7 +28,8 @@ public class Constant {
      * Other required field
      */
     public static String ADMIN_PASSWORD = "Albero@123";
-    public static String WIFI_SSID = "\"iSynergy-AP\"";
+    public static String WIFI_SSID = "\"Smart Water Level Monitor\"";
+    //public static String WIFI_SSID = "\"iSynergy-AP\"";
 
     /**
      * Shared Preferences variable
@@ -33,4 +37,26 @@ public class Constant {
     public static String SMARTDEVICE_PREF = "SMARTDEVICE_PREF";
     public static String IS_ADMIN = "IS_ADMIN";
     public static String SETUP_PAGE_NUMBER = "SETUP_PAGE_NUMBER";
+    public static String HISTORY_SYNC_TIME = "HISTORY_SYNC_TIME";
+    public static String CURRENT_VALUE_SYNC_TIME = "CURRENT_VALUE_SYNC_TIME";
+
+    public static boolean checkInternetConnection(Context context) {
+
+        ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService (Context.CONNECTIVITY_SERVICE);
+
+        // ARE WE CONNECTED TO THE NET
+        if(conMgr == null){
+            return false;
+        }
+        else{
+            if (conMgr.getActiveNetworkInfo() != null
+                    && conMgr.getActiveNetworkInfo().isAvailable()
+                    && conMgr.getActiveNetworkInfo().isConnected()) {
+                return true;
+
+            } else {
+                return false;
+            }
+        }
+    }
 }

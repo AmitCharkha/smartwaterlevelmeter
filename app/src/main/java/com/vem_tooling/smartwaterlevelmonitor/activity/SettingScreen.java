@@ -1,6 +1,10 @@
 package com.vem_tooling.smartwaterlevelmonitor.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,10 +21,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vem_tooling.smartwaterlevelmonitor.R;
+import com.vem_tooling.smartwaterlevelmonitor.db.SmartDeviceDB;
 import com.vem_tooling.smartwaterlevelmonitor.font_text_view.CorisandeBoldTextView;
 import com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoLightItalicTextView;
 import com.vem_tooling.smartwaterlevelmonitor.utils.Constant;
 import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences;
+import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryRequestVO;
+import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryVO;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,6 +35,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by amit on 15/6/17.
@@ -50,8 +58,14 @@ public class SettingScreen extends AppCompatActivity {
     @BindView(R.id.backTextView)
     LatoLightItalicTextView backTextView;
 
-    @BindView(R.id.errorMessage)
-    TextView errorMessage;
+    @BindView(R.id.refreshHistory)
+    CorisandeBoldTextView refreshHistory;
+
+    private int tankNo = 1;
+    private int startValue, endValue;
+
+    /*@BindView(R.id.errorMessage)
+    TextView errorMessage;*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,14 +90,45 @@ public class SettingScreen extends AppCompatActivity {
         setRtc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRtcTest();
+                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+                if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
+                    setRtc();
+                }else {
+                    new SweetAlertDialog(SettingScreen.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Oops..")
+                            .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                            .show();
+                }
             }
         });
 
         alarmSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(SettingScreen.this,AlarmSettingActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        refreshHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+                if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
+                    HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                    startValue = historyRequestVO.getStartValue();
+                    endValue = historyRequestVO.getEndValue();
+                    getHistory();
+                }else {
+                    new SweetAlertDialog(SettingScreen.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Oops..")
+                            .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                            .show();
+                }
             }
         });
         //SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
@@ -136,7 +181,7 @@ public class SettingScreen extends AppCompatActivity {
                         }catch (Exception e){
                             e.printStackTrace();
                             Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_LONG).show();
-                            errorMessage.setText(response + "\n" + " One : " + e.toString());
+                            //errorMessage.setText(response + "\n" + " One : " + e.toString());
                         }
 
 
@@ -150,9 +195,9 @@ public class SettingScreen extends AppCompatActivity {
                                         progress.cancel();
                                     }
                                     try {
-                                         if(response.equals("(0)")) {
-                                             Toast.makeText(SettingScreen.this,"RTC time set successfully",Toast.LENGTH_LONG).show();
-                                         }
+                                        if(response.equals("(0)")) {
+                                            Toast.makeText(SettingScreen.this,"RTC time set successfully",Toast.LENGTH_LONG).show();
+                                        }
 
                                     } catch (Exception e) {
                                         Toast.makeText(SettingScreen.this, "Error occurred", Toast.LENGTH_LONG).show();
@@ -175,14 +220,14 @@ public class SettingScreen extends AppCompatActivity {
 
                     }catch (Exception e){
                         Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_LONG).show();
-                        errorMessage.setText(response + "\n" + " Two :  " + e.toString());
+                        //errorMessage.setText(response + "\n" + " Two :  " + e.toString());
                     }
                 }
 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    errorMessage.setText("Three :  " + error.toString());
+                    //errorMessage.setText("Three :  " + error.toString());
                     Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_LONG).show();
                     if(progress != null){
                         progress.cancel();
@@ -220,6 +265,125 @@ public class SettingScreen extends AppCompatActivity {
 
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    void getHistory(){
+        final ProgressDialog progress = new ProgressDialog(SettingScreen.this);
+        try{
+            progress.setMessage("Please Wait...");
+            progress.show();
+
+            if (endValue == 0 || endValue == 1 || endValue == 1001 || endValue == 1000) {
+                startValue = 1;
+                endValue = 100;
+            } else {
+                int rem = endValue % 100;
+                rem = 100 - rem;
+                startValue = endValue;
+                endValue = startValue + rem;
+            }
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.GET_HISTORY + tankNo + "/" + startValue + "/" + endValue + "/", new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        if (!response.equals("(0)")) {
+                            response = response.replace("(", "");
+                            response = response.replace(")", "");
+                            String args[] = response.split(":");
+
+                            String args1[] = args[0].split(",");
+
+                            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+                            String res = "More";
+                            for (int i = 0; i < args1.length; i = i + 2) {
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+                                String date = args1[i].trim() + "-00";
+                                Date d = formatter.parse(date);
+                                HistoryVO historyVO = new HistoryVO();
+                                historyVO.setDateTime(d.getTime());
+                                historyVO.setTankNo(tankNo);
+                                historyVO.setPercentage(Integer.parseInt(args1[i + 1].trim()));
+                                res = smartDeviceDB.insertTankHistory(historyVO);
+                                if (res.equals("Change")) {
+                                    // It should be minus to but we are starting from zero that's why minus one
+                                    // When we find change it will access value which is repeated to keep end value as last new value we need to minus i by 2.
+                                    // i / 2 is required as we have 2 item for one value item 1 : date and item 2 : percentage
+                                    i = i - 1;
+                                    endValue = startValue + (i / 2);
+                                    break;
+                                }
+                            }
+                            if (res.equals("More")) {
+                                startValue = Integer.parseInt(args[1]);
+                                endValue = Integer.parseInt(args[1]);
+                                getHistory();
+                            } else {
+                                HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
+                                historyRequestVO1.setTankNo(tankNo);
+                                historyRequestVO1.setStartValue(startValue);
+                                historyRequestVO1.setEndValue(endValue + 1);
+                                smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
+                                if (tankNo < 6) {
+                                    tankNo = tankNo + 1;
+                                    HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                                    startValue = historyRequestVO.getStartValue();
+                                    endValue = historyRequestVO.getEndValue();
+                                    getHistory();
+                                }else{
+                                    if(progress != null){
+                                        progress.cancel();
+                                    }
+                                    new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
+                                }
+                            }
+                        } else {
+                            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+                            HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
+                            historyRequestVO1.setTankNo(tankNo);
+                            historyRequestVO1.setStartValue(startValue);
+                            historyRequestVO1.setEndValue(endValue + 1);
+                            smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
+                            if (tankNo < 6) {
+                                tankNo = tankNo + 1;
+                                HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                                startValue = historyRequestVO.getStartValue();
+                                endValue = historyRequestVO.getEndValue();
+                                getHistory();
+                            }else{
+                                if(progress != null){
+                                    progress.cancel();
+                                }
+                                new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        if(progress != null){
+                            progress.cancel();
+                        }
+                        e.printStackTrace();
+                        Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if(progress != null){
+                        progress.cancel();
+                    }
+                    Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            RequestQueue requestQueue = Volley.newRequestQueue(SettingScreen.this);
+            requestQueue.add(stringRequest);
+        }catch (Exception e){
+            if(progress != null){
+                progress.cancel();
+            }
+            Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
         }
     }
 }

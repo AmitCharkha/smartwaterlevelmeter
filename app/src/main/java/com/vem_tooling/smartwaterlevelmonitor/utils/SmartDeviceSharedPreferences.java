@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Calendar;
+
 /**
  * Created by amit on 15/6/17.
  */
@@ -40,4 +42,32 @@ public class SmartDeviceSharedPreferences {
         edit.putInt(Constant.SETUP_PAGE_NUMBER, number);
         edit.commit();
     }
+
+    public long getLastSync(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        long syncTime = sharedPreferences.getLong(Constant.HISTORY_SYNC_TIME, 0);
+        return syncTime;
+    }
+
+    public void setLastSync(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putLong(Constant.HISTORY_SYNC_TIME, Calendar.getInstance().getTimeInMillis());
+        edit.commit();
+    }
+
+    public long getCurrentValueLastSync(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        long syncTime = sharedPreferences.getLong(Constant.CURRENT_VALUE_SYNC_TIME, 0);
+        return syncTime;
+    }
+
+    public void setCurrentValueLastSync(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putLong(Constant.CURRENT_VALUE_SYNC_TIME, Calendar.getInstance().getTimeInMillis());
+        edit.commit();
+    }
+
+
 }
