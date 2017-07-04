@@ -39,7 +39,6 @@ import com.vem_tooling.smartwaterlevelmonitor.vo.TankVO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -361,14 +360,14 @@ public class MainActivity extends AppCompatActivity
                             nm.notify(0, builder.build());
                         }
 
-                        long synTime = Calendar.getInstance().getTimeInMillis() - (1000*60*10); // 10 minutes
+                        /*long synTime = Calendar.getInstance().getTimeInMillis() - (1000*60*10); // 10 minutes
                         if(new SmartDeviceSharedPreferences(getApplicationContext()).getLastSync() < synTime) {
                             new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
                             HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
                             startValue = historyRequestVO.getStartValue();
                             endValue = historyRequestVO.getEndValue();
                             getHistory();
-                        }
+                        }*/
                         if(progress != null){
                             progress.cancel();
                         }

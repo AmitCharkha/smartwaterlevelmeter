@@ -64,8 +64,8 @@ public class SettingScreen extends AppCompatActivity {
     private int tankNo = 1;
     private int startValue, endValue;
 
-    /*@BindView(R.id.errorMessage)
-    TextView errorMessage;*/
+    @BindView(R.id.errorMessage)
+    TextView errorMessage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -284,10 +284,12 @@ public class SettingScreen extends AppCompatActivity {
                 endValue = startValue + rem;
             }
 
+            errorMessage.setText("\n**Calling Tank No : " + tankNo + " **Start Value = " + startValue + " **End Value = " + endValue);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.GET_HISTORY + tankNo + "/" + startValue + "/" + endValue + "/", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
+                        errorMessage.setText("\n**Response : " + response);
                         if (!response.equals("(0)")) {
                             response = response.replace("(", "");
                             response = response.replace(")", "");
@@ -364,6 +366,7 @@ public class SettingScreen extends AppCompatActivity {
                             progress.cancel();
                         }
                         e.printStackTrace();
+                        errorMessage.setText("\n**Error No 1 : " + e.toString());
                         Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -373,6 +376,7 @@ public class SettingScreen extends AppCompatActivity {
                     if(progress != null){
                         progress.cancel();
                     }
+                    errorMessage.setText("\n**Error No 2 : " + error.toString());
                     Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
                 }
             });
@@ -383,6 +387,7 @@ public class SettingScreen extends AppCompatActivity {
             if(progress != null){
                 progress.cancel();
             }
+            errorMessage.setText("\n**Error No 3 : " + e.toString());
             Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
         }
     }
