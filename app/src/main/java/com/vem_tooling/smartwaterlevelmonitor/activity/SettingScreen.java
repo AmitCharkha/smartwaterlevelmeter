@@ -67,6 +67,7 @@ public class SettingScreen extends AppCompatActivity {
     @BindView(R.id.errorMessage)
     TextView errorMessage;
 
+    ProgressDialog progress;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +75,8 @@ public class SettingScreen extends AppCompatActivity {
         ButterKnife.bind(this);
 
         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+
+        progress = new ProgressDialog(SettingScreen.this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimaryDark));
@@ -129,6 +132,8 @@ public class SettingScreen extends AppCompatActivity {
                             .setContentText("You are not connected with tank wifi. Please connect and retry.")
                             .show();
                 }
+
+                //getHistoryTest();
             }
         });
         //SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
@@ -148,10 +153,11 @@ public class SettingScreen extends AppCompatActivity {
     }
 
     void setRtc(){
-        final ProgressDialog progress = new ProgressDialog(SettingScreen.this);
         try{
-            progress.setMessage("Calling Get RTC...");
-            progress.show();
+            if(!progress.isShowing()) {
+                progress.setMessage("Calling Get RTC...");
+                progress.show();
+            }
             StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.GET_RTC, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -269,10 +275,11 @@ public class SettingScreen extends AppCompatActivity {
     }
 
     void getHistory(){
-        final ProgressDialog progress = new ProgressDialog(SettingScreen.this);
         try{
-            progress.setMessage("Please Wait...");
-            progress.show();
+            if(!progress.isShowing()) {
+                progress.setMessage("Please Wait...");
+                progress.show();
+            }
 
             if (endValue == 0 || endValue == 1 || endValue == 1001 || endValue == 1000) {
                 startValue = 1;
@@ -284,12 +291,12 @@ public class SettingScreen extends AppCompatActivity {
                 endValue = startValue + rem;
             }
 
-            errorMessage.setText("\n**Calling Tank No : " + tankNo + " **Start Value = " + startValue + " **End Value = " + endValue);
+            errorMessage.setText(errorMessage.getText() + "\n**Calling Tank No : " + tankNo + " **Start Value = " + startValue + " **End Value = " + endValue);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.GET_HISTORY + tankNo + "/" + startValue + "/" + endValue + "/", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
-                        errorMessage.setText("\n**Response : " + response);
+                        errorMessage.setText(errorMessage.getText() + "\n**Response : " + response);
                         if (!response.equals("(0)")) {
                             response = response.replace("(", "");
                             response = response.replace(")", "");
@@ -312,20 +319,23 @@ public class SettingScreen extends AppCompatActivity {
                                     // It should be minus to but we are starting from zero that's why minus one
                                     // When we find change it will access value which is repeated to keep end value as last new value we need to minus i by 2.
                                     // i / 2 is required as we have 2 item for one value item 1 : date and item 2 : percentage
-                                    i = i - 1;
+                                    i = i + 2;
                                     endValue = startValue + (i / 2);
                                     break;
+                                }else{
+
                                 }
                             }
                             if (res.equals("More")) {
                                 startValue = Integer.parseInt(args[1]);
-                                endValue = Integer.parseInt(args[1]);
+                                endValue = Integer.parseInt(args[1]) + 1;
                                 getHistory();
                             } else {
+                                endValue = endValue + 1;
                                 HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
                                 historyRequestVO1.setTankNo(tankNo);
                                 historyRequestVO1.setStartValue(startValue);
-                                historyRequestVO1.setEndValue(endValue + 1);
+                                historyRequestVO1.setEndValue(endValue);
                                 smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
                                 if (tankNo < 6) {
                                     tankNo = tankNo + 1;
@@ -341,11 +351,12 @@ public class SettingScreen extends AppCompatActivity {
                                 }
                             }
                         } else {
+                            endValue = endValue + 1;
                             SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
                             HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
                             historyRequestVO1.setTankNo(tankNo);
                             historyRequestVO1.setStartValue(startValue);
-                            historyRequestVO1.setEndValue(endValue + 1);
+                            historyRequestVO1.setEndValue(endValue);
                             smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
                             if (tankNo < 6) {
                                 tankNo = tankNo + 1;
@@ -366,7 +377,7 @@ public class SettingScreen extends AppCompatActivity {
                             progress.cancel();
                         }
                         e.printStackTrace();
-                        errorMessage.setText("\n**Error No 1 : " + e.toString());
+                        errorMessage.setText(errorMessage.getText() + "\n**Error No 1 : " + e.toString());
                         Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -376,7 +387,7 @@ public class SettingScreen extends AppCompatActivity {
                     if(progress != null){
                         progress.cancel();
                     }
-                    errorMessage.setText("\n**Error No 2 : " + error.toString());
+                    errorMessage.setText(errorMessage.getText() + "\n**Error No 2 : " + error.toString());
                     Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
                 }
             });
@@ -387,8 +398,45 @@ public class SettingScreen extends AppCompatActivity {
             if(progress != null){
                 progress.cancel();
             }
-            errorMessage.setText("\n**Error No 3 : " + e.toString());
+            errorMessage.setText(errorMessage.getText() + "\n**Error No 3 : " + e.toString());
             Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
         }
     }
+
+    void getHistoryTest(){
+        try {
+            String response = "(30-6-17 20-44,20,30-6-17 20-44,100,30-6-17 20-44,0,30-6-17 20-50,80,30-6-17 20-50,70,30-6-17 20-50,0,30-6-17 20-50,90,30-6-17 20-50,0,30-6-17 20-51,80,30-6-17 20-51,0,30-6-17 20-51,70,30-6-17 20-51,0,30-6-17 21-1,90,30-6-17 21-1,0,30-6-17 21-8,20,30-6-17 21-8,40,30-6-17 21-8,0,30-6-17 22-41,10,1-7-17 11-0,0,1-7-17 11-14,10,1-7-17 11-24,0,5-7-17 10-11,20,5-7-17 10-12,0,5-7-17 11-7,10,5-7-17 11-7,0,5-7-17 11-7,100,5-7-17 11-7,0,5-7-17 11-7,100,5-7-17 11-7,30,5-7-17 11-7,0,5-7-17 11-7,10,5-7-17 11-29,0,5-7-17 11-31,10,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 19-57,100,30-6-17 20-2,0,30-6-17 20-14,100,30-6-17 20-28,0,30-6-17 20-28,100,30-6-17 20-29,0,30-6-17 20-29,10,30-6-17 20-33,0,30-6-17 20-33,90,30-6-17 20-34,10,30-6-17 20-34,0,30-6-17 20-41,30,30-6-17 20-41,60,30-6-17 20-41,20,30-6-17 20-41,0,30-6-17 22-5,80,30-6-17 22-5,50,30-6-17 22-5,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-19,10,30-6-17 22-19,0,30-6-17 22-19,20,30-6-17 22-19,0,30-6-17 22-21,10,30-6-17 22-36,0,30-6-17 22-36,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0:99)";
+            response = response.replace("(", "");
+            response = response.replace(")", "");
+            String args[] = response.split(":");
+
+            String args1[] = args[0].split(",");
+
+            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
+            Toast.makeText(SettingScreen.this,"Length "+ args1.length,Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < args1.length; i = i + 2) {
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+                String date = args1[i].trim() + "-00";
+                Date d = formatter.parse(date);
+                HistoryVO historyVO = new HistoryVO();
+                historyVO.setDateTime(d.getTime());
+                historyVO.setTankNo(tankNo);
+                historyVO.setPercentage(Integer.parseInt(args1[i+1].trim()));
+                String res = smartDeviceDB.insertTankHistory(historyVO);
+                if (res.equals("Change")) {
+                    // It should be minus to but we are starting from zero that's why minus one
+                    // When we find change it will access value which is repeated to keep end value as last new value we need to minus i by 2.
+                    // i / 2 is required as we have 2 item for one value item 1 : date and item 2 : percentage
+                    break;
+                }else{
+
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 }
+
+
