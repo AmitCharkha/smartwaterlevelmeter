@@ -97,7 +97,9 @@ public class SettingScreen extends AppCompatActivity {
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
                 if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
-                    setRtc();
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
+                    Toast.makeText(getApplicationContext(),formatter.format(new Date(Calendar.getInstance().getTimeInMillis())).toString(),Toast.LENGTH_LONG).show();
+                    //setRtc();
                 }else {
                     new SweetAlertDialog(SettingScreen.this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Oops..")
@@ -166,7 +168,7 @@ public class SettingScreen extends AppCompatActivity {
                             progress.cancel();
                         }
                         boolean call = false;
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
                         try {
                             //response = response.replace("\n", "");
                             response = response.replace("(", "");
@@ -257,7 +259,7 @@ public class SettingScreen extends AppCompatActivity {
             //res = res.replace("\n", "");
             res = res.replace("(", "");
             res = res.replace(")", "");
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
 
             Date d = formatter.parse(res);
             long fiveMin = 1000*60*5;
@@ -307,8 +309,8 @@ public class SettingScreen extends AppCompatActivity {
                             SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
                             String res = "More";
                             for (int i = 0; i < args1.length; i = i + 2) {
-                                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
-                                String date = args1[i].trim() + "-00";
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH-mm-ss");
+                                String date = args1[i].trim();// + "-00";
                                 Date d = formatter.parse(date);
                                 HistoryVO historyVO = new HistoryVO();
                                 historyVO.setDateTime(d.getTime());
@@ -405,7 +407,8 @@ public class SettingScreen extends AppCompatActivity {
 
     void getHistoryTest(){
         try {
-            String response = "(30-6-17 20-44,20,30-6-17 20-44,100,30-6-17 20-44,0,30-6-17 20-50,80,30-6-17 20-50,70,30-6-17 20-50,0,30-6-17 20-50,90,30-6-17 20-50,0,30-6-17 20-51,80,30-6-17 20-51,0,30-6-17 20-51,70,30-6-17 20-51,0,30-6-17 21-1,90,30-6-17 21-1,0,30-6-17 21-8,20,30-6-17 21-8,40,30-6-17 21-8,0,30-6-17 22-41,10,1-7-17 11-0,0,1-7-17 11-14,10,1-7-17 11-24,0,5-7-17 10-11,20,5-7-17 10-12,0,5-7-17 11-7,10,5-7-17 11-7,0,5-7-17 11-7,100,5-7-17 11-7,0,5-7-17 11-7,100,5-7-17 11-7,30,5-7-17 11-7,0,5-7-17 11-7,10,5-7-17 11-29,0,5-7-17 11-31,10,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 19-57,100,30-6-17 20-2,0,30-6-17 20-14,100,30-6-17 20-28,0,30-6-17 20-28,100,30-6-17 20-29,0,30-6-17 20-29,10,30-6-17 20-33,0,30-6-17 20-33,90,30-6-17 20-34,10,30-6-17 20-34,0,30-6-17 20-41,30,30-6-17 20-41,60,30-6-17 20-41,20,30-6-17 20-41,0,30-6-17 22-5,80,30-6-17 22-5,50,30-6-17 22-5,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-19,10,30-6-17 22-19,0,30-6-17 22-19,20,30-6-17 22-19,0,30-6-17 22-21,10,30-6-17 22-36,0,30-6-17 22-36,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0:99)";
+            //String response = "(30-6-17 20-44,20,30-6-17 20-44,100,30-6-17 20-44,0,30-6-17 20-50,80,30-6-17 20-50,70,30-6-17 20-50,0,30-6-17 20-50,90,30-6-17 20-50,0,30-6-17 20-51,80,30-6-17 20-51,0,30-6-17 20-51,70,30-6-17 20-51,0,30-6-17 21-1,90,30-6-17 21-1,0,30-6-17 21-8,20,30-6-17 21-8,40,30-6-17 21-8,0,30-6-17 22-41,10,1-7-17 11-0,0,1-7-17 11-14,10,1-7-17 11-24,0,5-7-17 10-11,20,5-7-17 10-12,0,5-7-17 11-7,10,5-7-17 11-7,0,5-7-17 11-7,100,5-7-17 11-7,0,5-7-17 11-7,100,5-7-17 11-7,30,5-7-17 11-7,0,5-7-17 11-7,10,5-7-17 11-29,0,5-7-17 11-31,10,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 19-57,100,30-6-17 20-2,0,30-6-17 20-14,100,30-6-17 20-28,0,30-6-17 20-28,100,30-6-17 20-29,0,30-6-17 20-29,10,30-6-17 20-33,0,30-6-17 20-33,90,30-6-17 20-34,10,30-6-17 20-34,0,30-6-17 20-41,30,30-6-17 20-41,60,30-6-17 20-41,20,30-6-17 20-41,0,30-6-17 22-5,80,30-6-17 22-5,50,30-6-17 22-5,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-18,40,30-6-17 22-18,0,30-6-17 22-19,10,30-6-17 22-19,0,30-6-17 22-19,20,30-6-17 22-19,0,30-6-17 22-21,10,30-6-17 22-36,0,30-6-17 22-36,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0,30-6-17 8-22,100,30-6-17 8-22,0:99)";
+            String response = "(30-6-17 20-44-10,20,30-6-17 20-54-20,100:2)";
             response = response.replace("(", "");
             response = response.replace(")", "");
             String args[] = response.split(":");
@@ -415,8 +418,8 @@ public class SettingScreen extends AppCompatActivity {
             SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
             Toast.makeText(SettingScreen.this,"Length "+ args1.length,Toast.LENGTH_SHORT).show();
             for (int i = 0; i < args1.length; i = i + 2) {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
-                String date = args1[i].trim() + "-00";
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH-mm-ss");
+                String date = args1[i].trim(); //+ "-00";
                 Date d = formatter.parse(date);
                 HistoryVO historyVO = new HistoryVO();
                 historyVO.setDateTime(d.getTime());

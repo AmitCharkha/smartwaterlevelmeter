@@ -574,7 +574,7 @@ public class MainActivity extends AppCompatActivity
                             SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
                             String res = "More";
                             for (int i = 0; i < args1.length; i = i + 2) {
-                                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH-mm-ss");
                                 String date = args1[i].trim() + "-00";
                                 Date d = formatter.parse(date);
                                 HistoryVO historyVO = new HistoryVO();
@@ -658,7 +658,7 @@ public class MainActivity extends AppCompatActivity
 
             SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
             for (int i = 0; i < args1.length; i = i + 2) {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH-mm-ss");
                 String date = args1[i].trim() + "-00";
                 Date d = formatter.parse(date);
                 HistoryVO historyVO = new HistoryVO();
@@ -676,7 +676,7 @@ public class MainActivity extends AppCompatActivity
     void updateSyncTextView(){
         if(new SmartDeviceSharedPreferences(getApplicationContext()).getCurrentValueLastSync() > 0){
             Date date = new Date(new SmartDeviceSharedPreferences(getApplicationContext()).getCurrentValueLastSync());
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             lastSyncTextView.setText("Last refreshed time : " + formatter.format(date).toString());
         }else{
             lastSyncTextView.setText("");

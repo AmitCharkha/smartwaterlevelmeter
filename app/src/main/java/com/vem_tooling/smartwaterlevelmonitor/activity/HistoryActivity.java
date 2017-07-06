@@ -213,7 +213,7 @@ public class HistoryActivity extends AppCompatActivity {
         try{
             progress.setMessage("Fetching Data.. Please Wait...");
             progress.show();
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(dateClicked.getTime());
             String date = calendar.get(Calendar.DATE) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR) + " 00:00:00";
@@ -232,7 +232,7 @@ public class HistoryActivity extends AppCompatActivity {
                 chart.animateXY(2000, 2000);
                 chart.invalidate();
             }else{
-                SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                 Date date2 = new Date(new SmartDeviceSharedPreferences(getApplicationContext()).getLastSync());
                 if(new SmartDeviceSharedPreferences(getApplicationContext()).getLastSync() > 0) {
                     noDataAvailable.setText("No record found for selected date \n \n Last history updated on \n" + formatter1.format(date2));
