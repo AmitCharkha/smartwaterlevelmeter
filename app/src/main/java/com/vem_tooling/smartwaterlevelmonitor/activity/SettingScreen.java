@@ -1,7 +1,9 @@
 package com.vem_tooling.smartwaterlevelmonitor.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -55,11 +57,17 @@ public class SettingScreen extends AppCompatActivity {
     @BindView(R.id.line2)
     TextView line2;
 
+    @BindView(R.id.line4)
+    TextView line4;
+
     @BindView(R.id.backTextView)
     LatoLightItalicTextView backTextView;
 
     @BindView(R.id.refreshHistory)
     CorisandeBoldTextView refreshHistory;
+
+    @BindView(R.id.clearHistory)
+    CorisandeBoldTextView clearHistory;
 
     private int tankNo = 1;
     private int startValue, endValue;
@@ -85,9 +93,13 @@ public class SettingScreen extends AppCompatActivity {
         if(new SmartDeviceSharedPreferences(getApplicationContext()).getIsAdmin() == 1){
             setRtc.setVisibility(View.VISIBLE);
             line2.setVisibility(View.VISIBLE);
+            clearHistory.setVisibility(View.VISIBLE);
+            line4.setVisibility(View.VISIBLE);
         }else{
             setRtc.setVisibility(View.INVISIBLE);
             line2.setVisibility(View.INVISIBLE);
+            clearHistory.setVisibility(View.INVISIBLE);
+            line4.setVisibility(View.INVISIBLE);
         }
 
         setRtc.setOnClickListener(new View.OnClickListener() {
@@ -97,9 +109,9 @@ public class SettingScreen extends AppCompatActivity {
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
                 if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
-                    Toast.makeText(getApplicationContext(),formatter.format(new Date(Calendar.getInstance().getTimeInMillis())).toString(),Toast.LENGTH_LONG).show();
-                    //setRtc();
+                    /*SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
+                    Toast.makeText(getApplicationContext(),formatter.format(new Date(Calendar.getInstance().getTimeInMillis())).toString(),Toast.LENGTH_LONG).show();*/
+                    setRtc();
                 }else {
                     new SweetAlertDialog(SettingScreen.this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Oops..")
@@ -120,6 +132,7 @@ public class SettingScreen extends AppCompatActivity {
         refreshHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
@@ -136,6 +149,38 @@ public class SettingScreen extends AppCompatActivity {
                 }
 
                 //getHistoryTest();
+            }
+        });
+
+        clearHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingScreen.this);
+                alertDialog.setTitle("Clear History");
+                alertDialog.setMessage("Do you really want to clear device history?");
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+                        if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
+                            clearDeviceHistory();
+                        }else {
+                            new SweetAlertDialog(SettingScreen.this, SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Oops..")
+                                    .setContentText("You are not connected with tank wifi. Please connect and retry.")
+                                    .show();
+                        }
+                    }
+                });
+                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alertDialog.show();
             }
         });
         //SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
@@ -252,6 +297,40 @@ public class SettingScreen extends AppCompatActivity {
         }
     }
 
+
+    void clearDeviceHistory(){
+        if(!progress.isShowing()) {
+            progress.setMessage("Clearing history...Please Wait...");
+            progress.show();
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.CLEAR_HISTORY, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    if(progress != null){
+                        progress.cancel();
+                    }
+                    if(response.equals("(0)")) {
+                        Toast.makeText(SettingScreen.this,"Data NOT cleared",Toast.LENGTH_LONG).show();
+                    }else if(response.equals("(1)")){
+                        Toast.makeText(SettingScreen.this,"Successfully data cleared",Toast.LENGTH_LONG).show();
+                    }
+                }catch (Exception e){
+                    Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_LONG).show();
+                if(progress != null){
+                    progress.cancel();
+                }
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
 
     void setRtcTest(){
         try {

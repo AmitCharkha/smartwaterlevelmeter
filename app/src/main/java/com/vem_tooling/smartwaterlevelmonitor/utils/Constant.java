@@ -23,6 +23,7 @@ public class Constant {
     public static String CALIBAR_SENESOR_BOTTOM_LEVEL = WEB_URL + "calibrSensbotlev/";
     public static String GET_RTC = WEB_URL + "getRTC/";
     public static String SET_RTC = WEB_URL + "setRTC/";
+    public static String CLEAR_HISTORY = WEB_URL + "clear_history/";
 
     /**
      * Other required field
