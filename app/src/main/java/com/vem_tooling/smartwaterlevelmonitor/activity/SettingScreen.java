@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,14 @@ import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences
 import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryRequestVO;
 import com.vem_tooling.smartwaterlevelmonitor.vo.HistoryVO;
 
+import org.angmarch.views.NiceSpinner;
+
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +75,11 @@ public class SettingScreen extends AppCompatActivity {
     @BindView(R.id.clearHistory)
     CorisandeBoldTextView clearHistory;
 
+    @BindView(R.id.niceSpinner)
+    NiceSpinner niceSpinner;
+
     private int tankNo = 1;
+    private int tankNoForClear = 1;
     private int startValue, endValue;
 
     @BindView(R.id.errorMessage)
@@ -95,11 +105,13 @@ public class SettingScreen extends AppCompatActivity {
             line2.setVisibility(View.VISIBLE);
             clearHistory.setVisibility(View.VISIBLE);
             line4.setVisibility(View.VISIBLE);
+            niceSpinner.setVisibility(View.VISIBLE);
         }else{
             setRtc.setVisibility(View.INVISIBLE);
             line2.setVisibility(View.INVISIBLE);
             clearHistory.setVisibility(View.INVISIBLE);
             line4.setVisibility(View.INVISIBLE);
+            niceSpinner.setVisibility(View.INVISIBLE);
         }
 
         setRtc.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +193,21 @@ public class SettingScreen extends AppCompatActivity {
                     }
                 });
                 alertDialog.show();
+            }
+        });
+
+        List<String> dataset = new LinkedList<>(Arrays.asList("Tank 1", "Tank 2", "Tank 3", "Tank 4", "Tank 5","Tank 6"));
+        niceSpinner.attachDataSource(dataset);
+
+        niceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                tankNoForClear = position + 1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
         //SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
@@ -300,10 +327,10 @@ public class SettingScreen extends AppCompatActivity {
 
     void clearDeviceHistory(){
         if(!progress.isShowing()) {
-            progress.setMessage("Clearing history...Please Wait...");
+            progress.setMessage("Clearing history for tank no "+tankNoForClear +"\nPlease Wait...");
             progress.show();
         }
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.CLEAR_HISTORY, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Constant.CLEAR_HISTORY + tankNoForClear + "/", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

@@ -83,13 +83,25 @@
         android:layout_height="1dp" />
 
 
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/niceSpinner"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/line4"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content" />
+
     <com.vem_tooling.smartwaterlevelmonitor.font_text_view.CorisandeBoldTextView
         android:id="@+id/clearHistory"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/colorPrimary"
         android:text="Clear Hardware Device History"
         android:padding="10dp"
-        android:textSize="20sp"
-        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="15dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
         android:layout_height="wrap_content" />
 
     <TextView
