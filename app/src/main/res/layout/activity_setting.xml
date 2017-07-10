@@ -83,10 +83,44 @@
         android:layout_height="1dp" />
 
 
-    <TextView
-        android:id="@+id/errorMessage"
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/niceSpinner"
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:visibility="gone"
-        android:layout_height="match_parent" />
+        android:layout_below="@+id/line4"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content" />
+
+    <com.vem_tooling.smartwaterlevelmonitor.font_text_view.CorisandeBoldTextView
+        android:id="@+id/clearHistory"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/colorPrimary"
+        android:text="Clear Hardware Device History"
+        android:padding="10dp"
+        android:layout_marginTop="15dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/line4"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorPrimary"
+        android:layout_marginBottom="5dp"
+        android:layout_height="1dp" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:textIsSelectable="true"
+            android:layout_height="match_parent" />
+    </ScrollView>
 </LinearLayout>

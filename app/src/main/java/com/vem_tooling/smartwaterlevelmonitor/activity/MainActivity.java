@@ -39,7 +39,6 @@ import com.vem_tooling.smartwaterlevelmonitor.vo.TankVO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -361,14 +360,14 @@ public class MainActivity extends AppCompatActivity
                             nm.notify(0, builder.build());
                         }
 
-                        long synTime = Calendar.getInstance().getTimeInMillis() - (1000*60*10); // 10 minutes
+                        /*long synTime = Calendar.getInstance().getTimeInMillis() - (1000*60*10); // 10 minutes
                         if(new SmartDeviceSharedPreferences(getApplicationContext()).getLastSync() < synTime) {
                             new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
                             HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
                             startValue = historyRequestVO.getStartValue();
                             endValue = historyRequestVO.getEndValue();
                             getHistory();
-                        }
+                        }*/
                         if(progress != null){
                             progress.cancel();
                         }
@@ -575,7 +574,7 @@ public class MainActivity extends AppCompatActivity
                             SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
                             String res = "More";
                             for (int i = 0; i < args1.length; i = i + 2) {
-                                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH-mm-ss");
                                 String date = args1[i].trim() + "-00";
                                 Date d = formatter.parse(date);
                                 HistoryVO historyVO = new HistoryVO();
@@ -659,7 +658,7 @@ public class MainActivity extends AppCompatActivity
 
             SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
             for (int i = 0; i < args1.length; i = i + 2) {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH-mm-ss");
                 String date = args1[i].trim() + "-00";
                 Date d = formatter.parse(date);
                 HistoryVO historyVO = new HistoryVO();
@@ -677,7 +676,7 @@ public class MainActivity extends AppCompatActivity
     void updateSyncTextView(){
         if(new SmartDeviceSharedPreferences(getApplicationContext()).getCurrentValueLastSync() > 0){
             Date date = new Date(new SmartDeviceSharedPreferences(getApplicationContext()).getCurrentValueLastSync());
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             lastSyncTextView.setText("Last refreshed time : " + formatter.format(date).toString());
         }else{
             lastSyncTextView.setText("");
