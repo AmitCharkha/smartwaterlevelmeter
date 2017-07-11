@@ -87,10 +87,10 @@
         android:id="@+id/relativeLayoutOne"
         android:layout_width="match_parent"
         android:layout_below="@+id/topLayout"
-        android:background="@color/maroon_bg"
         android:alpha="0.4"
+        android:background="@color/maroon_bg"
+        android:focusable="false"
         android:layout_height="match_parent">
-
 
     </RelativeLayout>
 

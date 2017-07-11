@@ -110,9 +110,15 @@ public class UserSelection extends AppCompatActivity {
         if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
             relativeLayoutOne.setVisibility(View.GONE);
             linearLayoutOne.setVisibility(View.GONE);
+            continueTextView.setEnabled(true);
+            verifyTextview.setEnabled(true);
+            inputPassword.setEnabled(true);
         }else{
             relativeLayoutOne.setVisibility(View.VISIBLE);
             linearLayoutOne.setVisibility(View.VISIBLE);
+            continueTextView.setEnabled(false);
+            verifyTextview.setEnabled(false);
+            inputPassword.setEnabled(false);
         }
     }
 

@@ -82,6 +82,7 @@ public class SettingScreen extends AppCompatActivity {
     private int tankNo = 1;
     private int tankNoForClear = 1;
     private int startValue, endValue;
+    private int tag = 0;
 
     @BindView(R.id.errorMessage)
     TextView errorMessage;
@@ -150,7 +151,8 @@ public class SettingScreen extends AppCompatActivity {
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
                 if(wifiInfo.getSSID().toString().equals(Constant.WIFI_SSID)){
-                    HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                    tankNo = 1;
+                    HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(tankNo);
                     startValue = historyRequestVO.getStartValue();
                     endValue = historyRequestVO.getEndValue();
                     getHistory();
@@ -433,6 +435,7 @@ public class SettingScreen extends AppCompatActivity {
 
     void getHistory(){
         try{
+            refreshHistory.setEnabled(false);
             if(!progress.isShowing()) {
                 progress.setMessage("Please Wait...");
                 progress.show();
@@ -480,12 +483,17 @@ public class SettingScreen extends AppCompatActivity {
                                     endValue = startValue + (i / 2);
                                     break;
                                 }else{
-
+                                    refreshHistory.setEnabled(true);
                                 }
                             }
                             if (res.equals("More")) {
                                 startValue = Integer.parseInt(args[1]);
                                 endValue = Integer.parseInt(args[1]) + 1;
+                                HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
+                                historyRequestVO1.setTankNo(tankNo);
+                                historyRequestVO1.setStartValue(startValue);
+                                historyRequestVO1.setEndValue(endValue);
+                                smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
                                 getHistory();
                             } else {
                                 endValue = endValue + 1;
@@ -505,16 +513,10 @@ public class SettingScreen extends AppCompatActivity {
                                         progress.cancel();
                                     }
                                     new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
+                                    refreshHistory.setEnabled(true);
                                 }
                             }
                         } else {
-                            endValue = endValue + 1;
-                            SmartDeviceDB smartDeviceDB = new SmartDeviceDB(getApplicationContext());
-                            HistoryRequestVO historyRequestVO1 = new HistoryRequestVO();
-                            historyRequestVO1.setTankNo(tankNo);
-                            historyRequestVO1.setStartValue(startValue);
-                            historyRequestVO1.setEndValue(endValue);
-                            smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
                             if (tankNo < 6) {
                                 tankNo = tankNo + 1;
                                 HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
@@ -526,9 +528,9 @@ public class SettingScreen extends AppCompatActivity {
                                     progress.cancel();
                                 }
                                 new SmartDeviceSharedPreferences(getApplicationContext()).setLastSync();
+                                refreshHistory.setEnabled(true);
                             }
                         }
-
                     } catch (Exception e) {
                         if(progress != null){
                             progress.cancel();
@@ -536,6 +538,7 @@ public class SettingScreen extends AppCompatActivity {
                         e.printStackTrace();
                         errorMessage.setText(errorMessage.getText() + "\n**Error No 1 : " + e.toString());
                         Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
+                        refreshHistory.setEnabled(true);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -546,10 +549,16 @@ public class SettingScreen extends AppCompatActivity {
                     }
                     errorMessage.setText(errorMessage.getText() + "\n**Error No 2 : " + error.toString());
                     Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
+                    refreshHistory.setEnabled(true);
                 }
             });
 
             RequestQueue requestQueue = Volley.newRequestQueue(SettingScreen.this);
+            if(tag != 0) {
+                requestQueue.cancelAll(tag);
+            }
+            tag = tag + 1;
+            stringRequest.setTag(tag);
             requestQueue.add(stringRequest);
             stringRequest.setRetryPolicy(new RetryPolicy() {
                 @Override
@@ -567,12 +576,14 @@ public class SettingScreen extends AppCompatActivity {
 
                 }
             });
+
         }catch (Exception e){
             if(progress != null){
                 progress.cancel();
             }
             errorMessage.setText(errorMessage.getText() + "\n**Error No 3 : " + e.toString());
             Toast.makeText(SettingScreen.this,"Error occurred",Toast.LENGTH_SHORT).show();
+            refreshHistory.setEnabled(true);
         }
     }
 
