@@ -41,6 +41,8 @@ public class Constant {
     public static String HISTORY_SYNC_TIME = "HISTORY_SYNC_TIME";
     public static String CURRENT_VALUE_SYNC_TIME = "CURRENT_VALUE_SYNC_TIME";
 
+    public static int TIME_OUT = 500000; // In milliseconds.
+
     public static boolean checkInternetConnection(Context context) {
 
         ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService (Context.CONNECTIVITY_SERVICE);

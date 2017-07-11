@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -248,7 +249,7 @@ public class SettingScreen extends AppCompatActivity {
 
 
                             Date d = formatter.parse(response);
-                            long fiveMin = 1000*60*5;
+                            long fiveMin = 1000*60*1; // 1 minute
 
                             if((d.getTime() - Calendar.getInstance().getTimeInMillis()) > fiveMin || ((Calendar.getInstance().getTimeInMillis() - d.getTime()) > fiveMin)){
                                 call = true;
@@ -296,6 +297,22 @@ public class SettingScreen extends AppCompatActivity {
 
                             RequestQueue requestQueue = Volley.newRequestQueue(SettingScreen.this);
                             requestQueue.add(stringRequest);
+                            stringRequest.setRetryPolicy(new RetryPolicy() {
+                                @Override
+                                public int getCurrentTimeout() {
+                                    return Constant.TIME_OUT;
+                                }
+
+                                @Override
+                                public int getCurrentRetryCount() {
+                                    return 0;
+                                }
+
+                                @Override
+                                public void retry(VolleyError error) throws VolleyError {
+
+                                }
+                            });
                         }
 
                     }catch (Exception e){
@@ -317,6 +334,22 @@ public class SettingScreen extends AppCompatActivity {
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             requestQueue.add(stringRequest);
+            stringRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return Constant.TIME_OUT;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 0;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+
+                }
+            });
         }catch (Exception e){
             if(progress != null){
                 progress.cancel();
@@ -357,6 +390,22 @@ public class SettingScreen extends AppCompatActivity {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return Constant.TIME_OUT;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 0;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
     }
 
     void setRtcTest(){
@@ -444,7 +493,7 @@ public class SettingScreen extends AppCompatActivity {
                                 historyRequestVO1.setTankNo(tankNo);
                                 historyRequestVO1.setStartValue(startValue);
                                 historyRequestVO1.setEndValue(endValue);
-                                smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
+                                int result = smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
                                 if (tankNo < 6) {
                                     tankNo = tankNo + 1;
                                     HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
@@ -502,6 +551,22 @@ public class SettingScreen extends AppCompatActivity {
 
             RequestQueue requestQueue = Volley.newRequestQueue(SettingScreen.this);
             requestQueue.add(stringRequest);
+            stringRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return Constant.TIME_OUT;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 0;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+
+                }
+            });
         }catch (Exception e){
             if(progress != null){
                 progress.cancel();
