@@ -504,7 +504,7 @@ public class SettingScreen extends AppCompatActivity {
                                 int result = smartDeviceDB.updateTankHistoryRequest(historyRequestVO1);
                                 if (tankNo < 6) {
                                     tankNo = tankNo + 1;
-                                    HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                                    HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(tankNo);
                                     startValue = historyRequestVO.getStartValue();
                                     endValue = historyRequestVO.getEndValue();
                                     getHistory();
@@ -519,7 +519,7 @@ public class SettingScreen extends AppCompatActivity {
                         } else {
                             if (tankNo < 6) {
                                 tankNo = tankNo + 1;
-                                HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(1);
+                                HistoryRequestVO historyRequestVO = new SmartDeviceDB(getApplicationContext()).getTankHistoryRequest(tankNo);
                                 startValue = historyRequestVO.getStartValue();
                                 endValue = historyRequestVO.getEndValue();
                                 getHistory();
