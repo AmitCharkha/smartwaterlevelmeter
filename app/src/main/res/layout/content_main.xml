@@ -250,4 +250,18 @@
 
 
     </android.support.v7.widget.RecyclerView>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/refreshTextView"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:textIsSelectable="true"
+            android:layout_height="match_parent" />
+    </ScrollView>
 </RelativeLayout>
