@@ -69,5 +69,57 @@ public class SmartDeviceSharedPreferences {
         edit.commit();
     }
 
+    public String getNewSSID(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        String ssid = sharedPreferences.getString(Constant.NEW_SSID,null);
+        return ssid;
+    }
+
+    public void setNewSSID(String ssid){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(Constant.NEW_SSID, ssid);
+        edit.commit();
+    }
+
+    public String getNewPassword(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        String ssid = sharedPreferences.getString(Constant.NEW_SSID_PASSWORD,null);
+        return ssid;
+    }
+
+    public void setNewPassword(String ssid){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(Constant.NEW_SSID_PASSWORD, ssid);
+        edit.commit();
+    }
+
+    public String getHomeWifiSsid(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        String ssid = sharedPreferences.getString(Constant.HOME_WIFI_SSID,null);
+        return ssid;
+    }
+
+    public void setHomeWifiSsid(String ssid){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(Constant.HOME_WIFI_SSID, ssid);
+        edit.commit();
+    }
+
+    public String getHomeWifiPassword(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        String ssid = sharedPreferences.getString(Constant.HOME_WIFI_SSID_PASSWORD,null);
+        return ssid;
+    }
+
+    public void setHomeWifiPassword(String ssid){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SMARTDEVICE_PREF, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(Constant.HOME_WIFI_SSID_PASSWORD, ssid);
+        edit.commit();
+    }
+
 
 }

@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.vem_tooling.smartwaterlevelmonitor.R;
-import com.vem_tooling.smartwaterlevelmonitor.utils.SmartDeviceSharedPreferences;
 
 import gr.net.maroulis.library.EasySplashScreen;
 
@@ -22,7 +21,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         try {
-            if (new SmartDeviceSharedPreferences(getApplicationContext()).getSetupPageNumber() == 2) {
+            /*if (new SmartDeviceSharedPreferences(getApplicationContext()).getSetupPageNumber() == 2) {
                 if(new SmartDeviceSharedPreferences(getApplicationContext()).getIsAdmin() == 1){
                     Bundle bundle = new Bundle();
                     bundle.putString("activityName", "SplashScreen");
@@ -73,7 +72,7 @@ public class SplashScreen extends AppCompatActivity {
             } else {
                 View easySplashScreenView = new EasySplashScreen(SplashScreen.this)
                         .withFullScreen()
-                        .withTargetActivity(UserSelection.class)
+                        .withTargetActivity(HardwareDeviceSetup.class)
                         .withSplashTimeOut(2000)
                         .withBackgroundResource(android.R.color.holo_red_light)
                         .withHeaderText("")
@@ -84,7 +83,22 @@ public class SplashScreen extends AppCompatActivity {
                         .create();
 
                 setContentView(easySplashScreenView);
-            }
+            }*/
+
+            View easySplashScreenView = new EasySplashScreen(SplashScreen.this)
+                    .withFullScreen()
+                    .withTargetActivity(LoginActivity.class)
+                    .withSplashTimeOut(2000)
+                    .withBackgroundResource(android.R.color.holo_red_light)
+                    .withHeaderText("")
+                    .withFooterText("Copyright 2017")
+                    .withBeforeLogoText("VEM Tooling Pvt Ltd")
+                    .withLogo(R.drawable.vem_logo)
+                    .withAfterLogoText("Smart Water Level Monitor")
+                    .create();
+
+            setContentView(easySplashScreenView);
+
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),"Error Occurred", Toast.LENGTH_LONG).show();
         }

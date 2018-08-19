@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.vem_tooling.smartwaterlevelmonitor.font_text_view.CorisandeBoldTextView
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Login"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/topLayout"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="100dp"
+            android:src="@drawable/vem_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_height="100dp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_email"
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/imageView1"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/emailPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:typeface="serif"
+                android:inputType="textEmailAddress"
+                android:hint="Enter Email ID" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_password"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/input_layout_email"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/inputPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:typeface="serif"
+                android:inputType="textPassword"
+                android:hint="Enter Password" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <com.vem_tooling.smartwaterlevelmonitor.font_text_view.LatoRegularTextView
+            android:id="@+id/loginTextView"
+            android:layout_marginTop="20dp"
+            android:text="LOGIN"
+            android:textSize="20sp"
+            android:padding="20dp"
+            android:layout_below="@+id/input_layout_password"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
